@@ -1,13 +1,14 @@
-import { useState } from 'react'
-import type { BookModel, UpdateBookModel } from '../BookModel'
-import { Button, Col, Row } from 'antd'
 import {
   CheckOutlined,
   CloseOutlined,
   DeleteOutlined,
   EditOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
+import { Button, Col, Modal, Row } from 'antd'
+import { useState } from 'react'
+import type { BookModel, UpdateBookModel } from '../BookModel'
 
 interface BookListItemProps {
   book: BookModel
@@ -27,6 +28,20 @@ export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
   const onValidateEdit = () => {
     onUpdate(book.id, { title })
     setIsEditing(false)
+  }
+
+  const showDeleteConfirm = () => {
+    Modal.confirm({
+      title: 'Are you sure you want to delete this book?',
+      icon: <ExclamationCircleOutlined />,
+      content: `${book.title} by ${book.author.firstName} ${book.author.lastName}`,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        onDelete(book.id)
+      },
+    })
   }
 
   return (
@@ -86,7 +101,7 @@ export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
             <EditOutlined />
           </Button>
         )}
-        <Button type="primary" danger onClick={() => onDelete(book.id)}>
+        <Button type="primary" danger onClick={showDeleteConfirm}>
           <DeleteOutlined />
         </Button>
       </Col>
