@@ -15,7 +15,7 @@ export class CreateBookDto {
 
   @IsString()
   @IsOptional()
-  imagePath?: string;
+  image?: string;
 }
 
 export class UpdateBookDto {
@@ -35,7 +35,7 @@ export class UpdateBookDto {
 
   @IsString()
   @IsOptional()
-  imagePath?: string;
+  image?: string;
 }
 
 export class GetBooksDto {

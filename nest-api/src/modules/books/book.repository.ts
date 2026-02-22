@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { saveImage } from 'src/utils/image';
 import { DataSource, Repository } from 'typeorm';
 import { AuthorEntity } from '../authors/author.entity';
 import {
@@ -56,16 +57,24 @@ export class BookRepository {
     };
   }
 
-  public async createBook(book: CreateBookModel): Promise<BookModel> {
+  public async createBook(newBook: CreateBookModel): Promise<BookModel> {
     const author = await this.authorRepository.findOne({
-      where: { id: book.authorId },
+      where: { id: newBook.authorId },
     });
 
     if (!author) {
       throw new Error('Author not found');
     }
 
-    return this.bookRepository.save(this.bookRepository.create(book));
+    let imagePath: string | undefined = undefined;
+    if (newBook.image) {
+      imagePath = saveImage(newBook.image, 'books', newBook.authorId);
+    }
+
+    return this.bookRepository.save(this.bookRepository.create({
+      ...newBook,
+      imagePath,
+    }));
   }
 
   public async updateBook(
@@ -80,7 +89,12 @@ export class BookRepository {
       return undefined;
     }
 
-    await this.bookRepository.update(id, book);
+    let imagePath: string | undefined = oldBook.imagePath;
+    if (book.image) {
+      imagePath = saveImage(book.image, 'books', oldBook.authorId);
+    }
+
+    await this.bookRepository.update(id, { ...book, imagePath });
   }
 
   public async deleteBook(id: string): Promise<void> {

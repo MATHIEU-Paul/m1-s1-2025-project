@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react'
+import { API_BASE_URL } from '../../config/api'
 import type { ClientModel, CreateClientModel, UpdateClientModel } from '../ClientModel'
 
 export const useClientProvider = () => {
@@ -7,7 +8,7 @@ export const useClientProvider = () => {
 
   const loadClients = () => {
     axios
-      .get('http://localhost:3000/clients')
+      .get(`${API_BASE_URL}/clients`)
       .then(data => {
         setClients(data.data.data)
       })
@@ -16,7 +17,7 @@ export const useClientProvider = () => {
 
   const createClient = (client: CreateClientModel) => {
     axios
-      .post('http://localhost:3000/clients', client)
+      .post(`${API_BASE_URL}/clients`, client)
       .then(() => {
         loadClients()
       })
@@ -25,7 +26,7 @@ export const useClientProvider = () => {
 
   const updateClient = (id: string, input: UpdateClientModel) => {
     axios
-      .put(`http://localhost:3000/clients/${id}`, input)
+      .put(`${API_BASE_URL}/clients/${id}`, input)
       .then(() => {
         loadClients()
       })
@@ -34,7 +35,7 @@ export const useClientProvider = () => {
 
   const deleteClient = (id: string) => {
     axios
-      .delete(`http://localhost:3000/clients/${id}`)
+      .delete(`${API_BASE_URL}/clients/${id}`)
       .then(() => {
         loadClients()
       })

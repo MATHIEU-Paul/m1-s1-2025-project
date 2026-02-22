@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
-import type { CreateBookModel } from '../BookModel'
-import { Button, Input, Modal, Select, Space } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
+import { Button, Input, Modal, Select, Space } from 'antd'
+import { useEffect, useState } from 'react'
+import { ImageInput } from '../../components/ImageInput'
+import type { CreateBookModel } from '../BookModel'
 import { useBookAuthorsProviders } from '../providers/useBookAuthorsProviders'
 
 interface CreateBookModalProps {
@@ -12,12 +13,14 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [yearPublished, setYearPublished] = useState(0)
+  const [image, setImage] = useState<string | undefined>(undefined)
   const [authorId, setAuthorId] = useState<string | undefined>(undefined)
   const { authors, loadAuthors } = useBookAuthorsProviders()
 
   const onClose = () => {
     setTitle('')
     setYearPublished(0)
+    setImage(undefined)
     setIsOpen(false)
   }
 
@@ -43,13 +46,15 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
           onCreate({
             title,
             yearPublished,
-            authorId: '4540d533-3100-445a-8796-ab5dfd9a3240',
+            image,
+            authorId: authorId!,
           })
           onClose()
         }}
         okButtonProps={{
           disabled: !authorId || !title?.length || !yearPublished,
         }}
+        title="Create New Book"
       >
         <Space direction="vertical" style={{ width: '100%' }}>
           <Input
@@ -71,6 +76,9 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
             placeholder="Year Published"
             value={yearPublished}
             onChange={e => setYearPublished(Number(e.target.value))}
+          />
+          <ImageInput
+            onImageChange={newImage => setImage(newImage)}
           />
         </Space>
       </Modal>

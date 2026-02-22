@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_BASE_URL } from '../../config/api'
 import type { ClientModel, ClientPurchase } from '../ClientModel'
 
 export const useClientDetailsProvider = (id: string) => {
@@ -8,7 +9,7 @@ export const useClientDetailsProvider = (id: string) => {
 
   const loadClient = () => {
     setIsLoading(true)
-    fetch(`http://localhost:3000/clients/${id}`)
+    fetch(`${API_BASE_URL}/clients/${id}`)
       .then(response => response.json())
       .then(data => {
         setClient(data)
@@ -21,7 +22,7 @@ export const useClientDetailsProvider = (id: string) => {
   const updateClient = (updates: Partial<ClientModel>) => {
     if (!client) return
 
-    fetch(`http://localhost:3000/clients/${id}`, {
+    fetch(`${API_BASE_URL}/clients/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updates),

@@ -17,7 +17,7 @@ export type CreateBookModel = {
   title: string;
   authorId: AuthorId;
   yearPublished: number;
-  imagePath?: string;
+  image?: string;
 };
 
 export type UpdateBookModel = Partial<CreateBookModel>;

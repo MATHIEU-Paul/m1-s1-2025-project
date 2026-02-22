@@ -1,13 +1,14 @@
-import { useState } from 'react'
-import type { BookModel } from '../BookModel'
 import axios from 'axios'
+import { useState } from 'react'
+import { API_BASE_URL } from '../../config/api'
+import type { BookModel } from '../BookModel'
 
 export const useBookAuthorsProviders = () => {
   const [authors, setAuthors] = useState<BookModel['author'][]>([])
 
   const loadAuthors = () => {
     axios
-      .get('http://localhost:3000/authors')
+      .get(`${API_BASE_URL}/authors`)
       .then(data => {
         setAuthors(data.data)
       })

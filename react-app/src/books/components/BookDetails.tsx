@@ -1,10 +1,11 @@
-import { Skeleton, Space, Typography, Button, Modal, Form, Input, InputNumber, message, Select } from 'antd'
-import { useBookDetailsProvider } from '../providers/useBookDetailsProvider'
-import { useBookAuthorsProviders } from '../providers/useBookAuthorsProviders'
-import { useEffect, useState } from 'react'
 import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
+import { Button, Form, Input, InputNumber, message, Modal, Select, Skeleton, Space, Typography } from 'antd'
+import { useEffect, useState } from 'react'
+import { API_BASE_URL } from '../../config/api'
 import { Route as booksRoute } from '../../routes/books'
+import { useBookAuthorsProviders } from '../providers/useBookAuthorsProviders'
+import { useBookDetailsProvider } from '../providers/useBookDetailsProvider'
 
 
 interface BookDetailsProps {
@@ -81,6 +82,13 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
       <Typography.Text strong>Published Year: </Typography.Text>
       <Typography.Text>{book?.yearPublished}</Typography.Text>
 
+      {book?.imagePath && (
+        <img 
+          src={API_BASE_URL + book.imagePath}
+          alt={`${book.title} cover`}
+          style={{ marginTop: '1rem', maxWidth: '200px', borderRadius: '5px' }}
+        />
+      )}
       
       <Modal 
         title="Edit Book Information" 
