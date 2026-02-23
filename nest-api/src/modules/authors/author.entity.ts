@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { BookEntity } from '../books/entities/book.entity';
 
 export type AuthorId = string & { __brand: 'Author' };
 
@@ -15,4 +22,9 @@ export class AuthorEntity extends BaseEntity {
 
   @Column({ name: 'image_path', type: 'varchar', nullable: true })
   imagePath?: string;
+
+  @OneToMany(() => BookEntity, (book) => book.author)
+  books: BookEntity[];
+
+  bookCount?: number;
 }

@@ -11,3 +11,17 @@ export class CreateAuthorDto {
   @IsOptional()
   imagePath?: string;
 }
+
+export class UpdateAuthorDto {
+  @IsString()
+  @IsOptional()
+  firstName?: string;
+
+  @IsString()
+  @IsOptional()
+  lastName?: string;
+
+  @IsString()
+  @IsOptional()
+  imagePath?: string;
+}
