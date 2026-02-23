@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { Button, Form, Input, InputNumber, message, Modal, Select, Skeleton, Space, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
+import { PurchaseBookModal } from '../../purchases/components/PurchaseBookModal'
 import { Route as booksRoute } from '../../routes/books'
 import { useBookAuthorsProviders } from '../providers/useBookAuthorsProviders'
 import { useBookDetailsProvider } from '../providers/useBookDetailsProvider'
@@ -36,20 +37,22 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
     }
   }
 
+
   const handleOk = async () => {
-  try {
-    const values = await form.validateFields();
-    await updateBook(values); 
-    
-    // ÉTAPE CRUCIALE : On recharge les données juste après l'update
-    await loadBook(); 
-    
-    setIsModalOpen(false);
-    message.success('Book updated successfully!');
-  } catch (error) {
-    console.error('Update failed:', error);
+    try {
+      const values = await form.validateFields()
+      await updateBook(values)
+
+      // Reload details after update
+      await loadBook()
+
+      setIsModalOpen(false)
+      message.success('Book updated successfully!')
+    } catch (error) {
+      console.error('Update failed:', error)
+    }
   }
-};
+
 
   if (isLoading) return <Skeleton active />
 
@@ -61,14 +64,17 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography.Title level={1}>Book Details</Typography.Title>
-        
-        <Button 
-          type="primary" 
-          icon={<EditOutlined />} 
-          onClick={showEditModal}
-        >
-          Edit Info
-        </Button>
+
+        <Space>
+          <PurchaseBookModal bookId={id} />
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={showEditModal}
+          >
+            Edit Info
+          </Button>
+        </Space>
       </div>
 
       <Typography.Title level={2}>
@@ -127,6 +133,7 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
           </Form.Item>
         </Form>
       </Modal>
+
     </Space>
   )
 }
