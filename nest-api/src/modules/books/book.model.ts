@@ -10,14 +10,14 @@ export type BookModel = {
   title: string;
   author: BookAuthorModel;
   yearPublished: number;
-  imagePath?: string;
+  coverPath?: string;
 };
 
 export type CreateBookModel = {
   title: string;
   authorId: AuthorId;
   yearPublished: number;
-  image?: string;
+  coverImage?: string;
 };
 
 export type UpdateBookModel = Partial<CreateBookModel>;

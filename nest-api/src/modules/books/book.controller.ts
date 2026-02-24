@@ -11,6 +11,7 @@ import {
 import { CreateBookDto, GetBooksDto, UpdateBookDto } from './book.dto';
 import { GetBooksModel } from './book.model';
 import { BookService } from './book.service';
+import { BookId } from './entities/book.entity';
 
 @Controller('books')
 export class BookController {
@@ -37,7 +38,7 @@ export class BookController {
 
   @Get(':id')
   public async getBook(@Param('id') id: string) {
-    return this.bookService.getBookById(id);
+    return this.bookService.getBookById(id as BookId);
   }
 
   @Post()
@@ -47,11 +48,11 @@ export class BookController {
 
   @Patch(':id')
   updateBook(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-    return this.bookService.updateBook(id, updateBookDto);
+    return this.bookService.updateBook(id as BookId, updateBookDto);
   }
 
   @Delete(':id')
   deleteBook(@Param('id') id: string) {
-    return this.bookService.deleteBook(id);
+    return this.bookService.deleteBook(id as BookId);
   }
 }

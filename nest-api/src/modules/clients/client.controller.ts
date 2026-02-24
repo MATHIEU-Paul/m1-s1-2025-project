@@ -9,6 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreateClientDto, GetAllClientsDto, UpdateClientDto } from './client.dto';
+import { ClientId } from './client.entity';
 import { FilterClientsModel } from './client.model';
 import { ClientService } from './client.service';
 
@@ -39,7 +40,7 @@ export class ClientController {
 
   @Get(':id')
   async getClientById(@Param('id') id: string) {
-    return this.clientService.getClientById(id as any);
+    return this.clientService.getClientById(id as ClientId);
   }
 
   @Post()
@@ -52,12 +53,12 @@ export class ClientController {
     @Param('id') id: string,
     @Body() updateClientDto: UpdateClientDto,
   ) {
-    return this.clientService.updateClient(id as any, updateClientDto);
+    return this.clientService.updateClient(id as ClientId, updateClientDto);
   }
 
   @Delete(':id')
   async deleteClient(@Param('id') id: string) {
-    await this.clientService.deleteClient(id as any);
+    await this.clientService.deleteClient(id as ClientId);
     return { message: 'Client deleted successfully' };
   }
 }

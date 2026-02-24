@@ -34,9 +34,9 @@ export class BookRepository {
     return [books, totalCount];
   }
 
-  public async getBookById(id: string): Promise<BookModel | undefined> {
+  public async getBookById(id: BookId): Promise<BookModel | undefined> {
     const book = await this.bookRepository.findOne({
-      where: { id: id as BookId },
+      where: { id },
     });
 
     if (!book) {
@@ -66,42 +66,42 @@ export class BookRepository {
       throw new Error('Author not found');
     }
 
-    let imagePath: string | undefined = undefined;
-    if (newBook.image) {
-      imagePath = saveImage(newBook.image, 'books', newBook.authorId);
+    let coverPath: string | undefined = undefined;
+    if (newBook.coverImage) {
+      coverPath = saveImage(newBook.coverImage, 'books', newBook.authorId);
     }
 
     return this.bookRepository.save(this.bookRepository.create({
       ...newBook,
-      imagePath,
+      coverPath,
     }));
   }
 
   public async updateBook(
-    id: string,
+    id: BookId,
     book: UpdateBookModel,
   ): Promise<BookModel | undefined> {
     const oldBook = await this.bookRepository.findOne({
-      where: { id: id as BookId },
+      where: { id },
     });
 
     if (!oldBook) {
       return undefined;
     }
 
-    let imagePath: string | undefined = oldBook.imagePath;
-    if (book.image) {
-      imagePath = saveImage(book.image, 'books', oldBook.authorId);
+    let coverPath: string | undefined = oldBook.coverPath;
+    if (book.coverImage) {
+      coverPath = saveImage(book.coverImage, 'books', oldBook.authorId);
     }
 
-    await this.bookRepository.update(id, { ...book, imagePath });
+    await this.bookRepository.update(id, { ...book, coverPath });
   }
 
-  public async deleteBook(id: string): Promise<void> {
+  public async deleteBook(id: BookId): Promise<void> {
     await this.bookRepository.delete(id);
   }
 
-  public async deleteBooks(ids: string[]): Promise<void> {
+  public async deleteBooks(ids: BookId[]): Promise<void> {
     await this.dataSource.transaction(async (transactionalEntityManager) => {
       await Promise.all(
         ids.map((id) => transactionalEntityManager.delete(BookEntity, { id })),

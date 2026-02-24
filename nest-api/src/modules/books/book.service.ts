@@ -6,6 +6,7 @@ import {
   UpdateBookModel,
 } from './book.model';
 import { BookRepository } from './book.repository';
+import { BookId } from './entities/book.entity';
 
 @Injectable()
 export class BookService {
@@ -17,7 +18,7 @@ export class BookService {
     return this.bookRepository.getAllBooks(input);
   }
 
-  public async getBookById(id: string): Promise<BookModel | undefined> {
+  public async getBookById(id: BookId): Promise<BookModel | undefined> {
     return this.bookRepository.getBookById(id);
   }
 
@@ -26,7 +27,7 @@ export class BookService {
   }
 
   public async updateBook(
-    id: string,
+    id: BookId,
     book: UpdateBookModel,
   ): Promise<BookModel | undefined> {
     const oldBook = await this.getBookById(id);
@@ -37,7 +38,7 @@ export class BookService {
     return this.bookRepository.updateBook(id, book);
   }
 
-  public async deleteBook(id: string): Promise<void> {
+  public async deleteBook(id: BookId): Promise<void> {
     await this.bookRepository.deleteBook(id);
   }
 }

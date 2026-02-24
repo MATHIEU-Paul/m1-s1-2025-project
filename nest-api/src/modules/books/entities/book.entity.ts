@@ -24,8 +24,8 @@ export class BookEntity extends BaseEntity {
   @Column({ name: 'author_id', type: 'uuid' })
   authorId: AuthorId;
 
-  @Column({ name: 'image_path', type: 'varchar', nullable: true })
-  imagePath?: string;
+  @Column({ name: 'cover_path', type: 'varchar', nullable: true })
+  coverPath?: string;
 
   @ManyToOne(() => AuthorEntity, (author) => author.books, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'author_id' })
