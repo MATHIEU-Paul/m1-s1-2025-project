@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { AuthorId } from '../authors/author.entity';
 import { BookId } from '../books/entities/book.entity';
 import { ClientId } from '../clients/client.entity';
 import {
@@ -37,6 +38,12 @@ export class PurchaseService {
     bookIds: BookId[],
   ): Promise<Record<string, number>> {
     return this.purchaseRepository.getPurchaseCountsByBookIds(bookIds);
+  }
+
+  public async getPurchaseCountByAuthorId(
+    authorId: AuthorId,
+  ): Promise<number> {
+    return this.purchaseRepository.getPurchaseCountByAuthorId(authorId);
   }
 
   public async createPurchase(

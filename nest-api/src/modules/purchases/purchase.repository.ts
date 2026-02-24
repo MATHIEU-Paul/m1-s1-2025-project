@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { AuthorId } from '../authors/author.entity';
 import { BookEntity, BookId } from '../books/entities/book.entity';
 import { ClientEntity, ClientId } from '../clients/client.entity';
 import { PurchaseEntity } from './purchase.entity';
@@ -122,6 +123,21 @@ export class PurchaseRepository {
       acc[row.bookId] = Number(row.count);
       return acc;
     }, {});
+  }
+
+  public async getPurchaseCountByAuthorId(
+    authorId: AuthorId,
+  ): Promise<number> {
+    return this.purchaseRepository.count({
+      where: {
+        book: {
+          authorId,
+        },
+      },
+      relations: {
+        book: true,
+      },
+    });
   }
 
   public async createPurchase(

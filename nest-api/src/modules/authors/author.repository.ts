@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { deleteImage, saveImage } from 'src/utils/image';
 import { Repository } from 'typeorm';
+import { PurchaseService } from '../purchases/purchase.service';
 import { AuthorEntity, AuthorId } from './author.entity';
 import {
+  AuthorDetailsModel,
   AuthorModel,
   AuthorWithBookCountModel,
-  AuthorWithBooksModel,
   CreateAuthorModel,
   UpdateAuthorModel,
 } from './author.model';
@@ -16,6 +17,7 @@ export class AuthorRepository {
   constructor(
     @InjectRepository(AuthorEntity)
     private readonly authorRepository: Repository<AuthorEntity>,
+    private readonly purchaseService: PurchaseService,
   ) {}
 
   public async getAllAuthors(): Promise<AuthorWithBookCountModel[]> {
@@ -37,7 +39,7 @@ export class AuthorRepository {
 
   public async getAuthorById(
     id: AuthorId,
-  ): Promise<AuthorWithBooksModel | undefined> {
+  ): Promise<AuthorDetailsModel | undefined> {
     const author = await this.authorRepository.findOne({
       where: { id },
       relations: { books: true },
@@ -58,8 +60,11 @@ export class AuthorRepository {
       return undefined;
     }
 
+    const purchasesCount = await this.purchaseService.getPurchaseCountByAuthorId(author.id);
+    const purchasesAverage = author.books?.length ? purchasesCount / author.books.length : 0;
     return {
       ...author,
+      purchasesAverage,
     };
   }
 

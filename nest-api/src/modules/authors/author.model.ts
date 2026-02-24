@@ -13,8 +13,9 @@ export type AuthorBookModel = {
   coverPath?: string;
 };
 
-export type AuthorWithBooksModel = AuthorModel & {
+export type AuthorDetailsModel = AuthorModel & {
   books: AuthorBookModel[];
+  purchasesAverage: number;
 };
 
 export type AuthorWithBookCountModel = AuthorModel & {

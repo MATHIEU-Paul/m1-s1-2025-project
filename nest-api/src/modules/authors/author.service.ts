@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { AuthorId } from './author.entity';
 import {
-  AuthorModel,
-  AuthorWithBookCountModel,
-  AuthorWithBooksModel,
-  CreateAuthorModel,
-  UpdateAuthorModel,
+    AuthorDetailsModel,
+    AuthorModel,
+    AuthorWithBookCountModel,
+    CreateAuthorModel,
+    UpdateAuthorModel,
 } from './author.model';
 import { AuthorRepository } from './author.repository';
 
@@ -19,7 +19,7 @@ export class AuthorService {
 
   public async getAuthorById(
     id: AuthorId,
-  ): Promise<AuthorWithBooksModel | undefined> {
+  ): Promise<AuthorDetailsModel | undefined> {
     return this.authorRepository.getAuthorById(id);
   }
 
