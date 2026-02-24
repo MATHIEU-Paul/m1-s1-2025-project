@@ -1,9 +1,10 @@
 import { AuthorId } from '../authors/author.entity';
 import { AuthorModel } from '../authors/author.model';
 import { BookPurchaseDetailsModel } from '../purchases/purchase.model';
+import { BookId } from './entities/book.entity';
 
 export type BookModel = {
-  id: string;
+  id: BookId;
   title: string;
   author: AuthorModel;
   yearPublished: number;
@@ -35,5 +36,5 @@ export type FilterBooksModel = {
 
 export type GetBooksModel = {
   totalCount: number;
-  data: BookModel[];
+  data: BookWithPurchaseCountModel[];
 };

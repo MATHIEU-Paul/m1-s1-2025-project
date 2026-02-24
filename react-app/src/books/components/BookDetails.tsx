@@ -1,6 +1,6 @@
 import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Button, Form, Input, InputNumber, message, Modal, Select, Skeleton, Space, Typography } from 'antd'
+import { Avatar, Button, Form, Input, InputNumber, List, message, Modal, Select, Skeleton, Space, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
 import { PurchaseBookModal } from '../../purchases/components/PurchaseBookModal'
@@ -88,11 +88,39 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
       <Typography.Text strong>Published Year: </Typography.Text>
       <Typography.Text>{book?.yearPublished}</Typography.Text>
 
-      {book?.imagePath && (
+      {book?.coverPath && (
         <img 
-          src={API_BASE_URL + book.imagePath}
+          src={API_BASE_URL + book.coverPath}
           alt={`${book.title} cover`}
           style={{ marginTop: '1rem', maxWidth: '200px', borderRadius: '5px' }}
+        />
+      )}
+
+      <Typography.Title level={4} style={{ marginTop: '1rem' }}>
+        Clients ({book?.purchases?.length ?? 0})
+      </Typography.Title>
+
+      {!book?.purchases?.length ? (
+        <Typography.Text type="secondary">No clients yet</Typography.Text>
+      ) : (
+        <List
+          style={{ width: '100%' }}
+          dataSource={book.purchases}
+          renderItem={purchase => (
+            <List.Item>
+              <List.Item.Meta
+                avatar={
+                  purchase.clientImagePath ? (
+                    <Avatar src={API_BASE_URL + purchase.clientImagePath} />
+                  ) : (
+                    <Avatar>{purchase.clientFirstName[0]}{purchase.clientLastName[0]}</Avatar>
+                  )
+                }
+                title={`${purchase.clientFirstName} ${purchase.clientLastName}`}
+                description={`Purchase date: ${new Date(purchase.purchaseDate).toLocaleDateString()}`}
+              />
+            </List.Item>
+          )}
         />
       )}
       

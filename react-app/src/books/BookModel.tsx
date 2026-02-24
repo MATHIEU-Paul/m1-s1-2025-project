@@ -10,6 +10,23 @@ export type BookModel = {
   coverPath?: string
 }
 
+export type BookPurchase = {
+  id: string
+  clientId: string
+  clientFirstName: string
+  clientLastName: string
+  clientImagePath?: string
+  purchaseDate: string
+}
+
+export type BookWithPurchaseCountModel = BookModel & {
+  purchaseCount: number
+}
+
+export type BookWithPurchasesModel = BookModel & {
+  purchases: BookPurchase[]
+}
+
 export type CreateBookModel = {
   authorId: string
   title: string

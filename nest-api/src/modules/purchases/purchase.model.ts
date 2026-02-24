@@ -13,7 +13,7 @@ export type ClientPurchaseDetailsModel = {
   bookId: BookId;
   bookTitle: string;
   bookAuthor: string;
-  bookCoverImage?: string;
+  bookCoverPath?: string;
   purchaseDate: string;
 };
 
@@ -22,6 +22,7 @@ export type BookPurchaseDetailsModel = {
   clientId: ClientId;
   clientFirstName: string;
   clientLastName: string;
+  clientImagePath?: string;
   purchaseDate: string;
 };
 

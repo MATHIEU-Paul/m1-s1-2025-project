@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
-import type { BookModel, CreateBookModel, UpdateBookModel } from '../BookModel'
+import type { BookWithPurchaseCountModel, CreateBookModel, UpdateBookModel } from '../BookModel'
 
 export const useBookProvider = () => {
-  const [books, setBooks] = useState<BookModel[]>([])
+  const [books, setBooks] = useState<BookWithPurchaseCountModel[]>([])
 
   const loadBooks = () => {
     axios

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
-import type { ClientModel, ClientPurchase } from '../ClientModel'
+import type { ClientModel, ClientPurchase, ClientWithPurchasesModel } from '../ClientModel'
 
 export const useClientDetailsProvider = (id: string) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -11,7 +11,7 @@ export const useClientDetailsProvider = (id: string) => {
     setIsLoading(true)
     fetch(`${API_BASE_URL}/clients/${id}`)
       .then(response => response.json())
-      .then((data: ClientModel & { purchases: ClientPurchase[] }) => {
+      .then((data: ClientWithPurchasesModel) => {
         setClient(data)
         setPurchases(data.purchases || [])
       })

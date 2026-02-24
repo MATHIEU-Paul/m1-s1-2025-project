@@ -8,10 +8,10 @@ import {
 import { Link } from '@tanstack/react-router'
 import { Button, Col, Modal, Row } from 'antd'
 import { useState } from 'react'
-import type { BookModel, UpdateBookModel } from '../BookModel'
+import type { BookWithPurchaseCountModel, UpdateBookModel } from '../BookModel'
 
 interface BookListItemProps {
-  book: BookModel
+  book: BookWithPurchaseCountModel
   onDelete: (id: string) => void
   onUpdate: (id: string, input: UpdateBookModel) => void
 }
@@ -70,7 +70,7 @@ export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
             }}
           >
             <span style={{ fontWeight: 'bold' }}>{book.title}</span> -{' '}
-            {book.yearPublished}
+            {book.yearPublished} ({book.purchaseCount} purchase{book.purchaseCount > 1 ? 's' : ''})
           </Link>
         )}
       </Col>

@@ -56,7 +56,7 @@ export class PurchaseRepository {
       bookTitle: purchase.book.title,
       bookAuthor: `${purchase.book.author.firstName} ${purchase.book.author.lastName}`,
       purchaseDate: purchase.purchaseDate.toISOString(),
-      bookCoverImage: purchase.book.coverPath,
+      bookCoverPath: purchase.book.coverPath,
     }));
   }
 
@@ -77,6 +77,7 @@ export class PurchaseRepository {
       clientId: purchase.clientId,
       clientFirstName: purchase.client.firstName,
       clientLastName: purchase.client.lastName,
+      clientImagePath: purchase.client.imagePath,
       purchaseDate: purchase.purchaseDate.toISOString(),
     }));
   }

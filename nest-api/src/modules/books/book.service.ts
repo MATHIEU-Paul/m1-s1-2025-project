@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { PurchaseService } from '../purchases/purchase.service';
 import {
+  BookDetailsModel,
   BookModel,
+  BookWithPurchaseCountModel,
   CreateBookModel,
   FilterBooksModel,
   UpdateBookModel,
@@ -10,16 +13,40 @@ import { BookId } from './entities/book.entity';
 
 @Injectable()
 export class BookService {
-  constructor(private readonly bookRepository: BookRepository) {}
+  constructor(
+    private readonly bookRepository: BookRepository,
+    private readonly purchaseService: PurchaseService,
+  ) {}
 
   public async getAllBooks(
     input?: FilterBooksModel,
-  ): Promise<[BookModel[], number]> {
-    return this.bookRepository.getAllBooks(input);
+  ): Promise<[BookWithPurchaseCountModel[], number]> {
+    const [books, totalCount] = await this.bookRepository.getAllBooks(input);
+
+    const purchaseCountsByBookId = await this.purchaseService.getPurchaseCountsByBookIds(
+      books.map((book) => book.id),
+    );
+
+    const booksWithCount = books.map((book) => ({
+      ...book,
+      purchaseCount: purchaseCountsByBookId[book.id] ?? 0,
+    }));
+
+    return [booksWithCount, totalCount];
   }
 
-  public async getBookById(id: BookId): Promise<BookModel | undefined> {
-    return this.bookRepository.getBookById(id);
+  public async getBookById(id: BookId): Promise<BookDetailsModel | undefined> {
+    const book = await this.bookRepository.getBookById(id);
+    if (!book) {
+      return undefined;
+    }
+
+    const purchases = await this.purchaseService.getPurchasesByBookId(id);
+
+    return {
+      ...book,
+      purchases,
+    };
   }
 
   public async createBook(book: CreateBookModel): Promise<BookModel> {

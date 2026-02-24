@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
-import type { BookModel, UpdateBookModel } from '../BookModel'
+import type { BookWithPurchasesModel, UpdateBookModel } from '../BookModel'
 
 export const useBookDetailsProvider = (id: string) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [book, setBook] = useState<BookModel | null>(null)
+  const [book, setBook] = useState<BookWithPurchasesModel | null>(null)
 
   const loadBook = () => {
     setIsLoading(true)

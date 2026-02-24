@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
-import type { ClientModel, CreateClientModel, UpdateClientModel } from '../ClientModel'
+import type { ClientWithPurchaseCountModel, CreateClientModel, UpdateClientModel } from '../ClientModel'
 
 export const useClientProvider = () => {
-  const [clients, setClients] = useState<ClientModel[]>([])
+  const [clients, setClients] = useState<ClientWithPurchaseCountModel[]>([])
 
   const loadClients = () => {
     axios
