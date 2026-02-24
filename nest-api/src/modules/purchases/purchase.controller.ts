@@ -1,4 +1,6 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { BookId } from '../books/entities/book.entity';
+import { ClientId } from '../clients/client.entity';
 import { CreatePurchaseDto } from './purchase.dto';
 import { PurchaseService } from './purchase.service';
 
@@ -9,6 +11,16 @@ export class PurchaseController {
   @Get()
   public async getAllPurchases() {
     return this.purchaseService.getAllPurchases();
+  }
+
+  @Get('client/:clientId')
+  public async getPurchasesByClientId(@Param('clientId') clientId: string) {
+    return this.purchaseService.getPurchasesByClientId(clientId as ClientId);
+  }
+
+  @Get('book/:bookId')
+  public async getPurchasesByBookId(@Param('bookId') bookId: string) {
+    return this.purchaseService.getPurchasesByBookId(bookId as BookId);
   }
 
   @Post()

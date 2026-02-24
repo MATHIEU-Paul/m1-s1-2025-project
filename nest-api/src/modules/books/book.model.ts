@@ -1,16 +1,21 @@
 import { AuthorId } from '../authors/author.entity';
-
-export type BookAuthorModel = {
-  firstName: string;
-  lastName: string;
-};
+import { AuthorModel } from '../authors/author.model';
+import { BookPurchaseDetailsModel } from '../purchases/purchase.model';
 
 export type BookModel = {
   id: string;
   title: string;
-  author: BookAuthorModel;
+  author: AuthorModel;
   yearPublished: number;
   coverPath?: string;
+};
+
+export type BookDetailsModel = BookModel & {
+  purchases: BookPurchaseDetailsModel[];
+};
+
+export type BookWithPurchaseCountModel = BookModel & {
+  purchaseCount: number;
 };
 
 export type CreateBookModel = {

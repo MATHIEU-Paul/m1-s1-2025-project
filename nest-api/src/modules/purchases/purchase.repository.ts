@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BookEntity } from '../books/entities/book.entity';
-import { ClientEntity } from '../clients/client.entity';
+import { BookEntity, BookId } from '../books/entities/book.entity';
+import { ClientEntity, ClientId } from '../clients/client.entity';
 import { PurchaseEntity } from './purchase.entity';
-import { CreatePurchaseModel, PurchaseModel } from './purchase.model';
+import {
+  BookPurchaseDetailsModel,
+  ClientPurchaseDetailsModel,
+  CreatePurchaseModel,
+  PurchaseModel,
+} from './purchase.model';
 
 @Injectable()
 export class PurchaseRepository {
@@ -28,6 +33,94 @@ export class PurchaseRepository {
       bookId: purchase.bookId,
       purchaseDate: purchase.purchaseDate.toISOString(),
     }));
+  }
+
+  public async getPurchasesByClientId(
+    clientId: ClientId,
+  ): Promise<ClientPurchaseDetailsModel[]> {
+    const purchases = await this.purchaseRepository.find({
+      where: { clientId },
+      relations: {
+        book: {
+          author: true,
+        },
+      },
+      order: {
+        purchaseDate: 'DESC',
+      },
+    });
+
+    return purchases.map((purchase) => ({
+      id: purchase.id,
+      bookId: purchase.bookId,
+      bookTitle: purchase.book.title,
+      bookAuthor: `${purchase.book.author.firstName} ${purchase.book.author.lastName}`,
+      purchaseDate: purchase.purchaseDate.toISOString(),
+      bookCoverImage: purchase.book.coverPath,
+    }));
+  }
+
+  public async getPurchasesByBookId(bookId: BookId): Promise<BookPurchaseDetailsModel[]> {
+    const purchases = await this.purchaseRepository.find({
+      where: { bookId },
+      relations: {
+        client: true
+      },
+      order: {
+        purchaseDate: 'DESC',
+      },
+    });
+
+
+    return purchases.map((purchase) => ({
+      id: purchase.id,
+      clientId: purchase.clientId,
+      clientFirstName: purchase.client.firstName,
+      clientLastName: purchase.client.lastName,
+      purchaseDate: purchase.purchaseDate.toISOString(),
+    }));
+  }
+
+  public async getPurchaseCountsByClientIds(
+    clientIds: ClientId[],
+  ): Promise<Record<ClientId, number>> {
+    if (clientIds.length === 0) {
+      return {};
+    }
+
+    const rows = await this.purchaseRepository
+      .createQueryBuilder('purchase')
+      .select('purchase.clientId', 'clientId')
+      .addSelect('COUNT(purchase.id)', 'count')
+      .where('purchase.clientId IN (:...clientIds)', { clientIds })
+      .groupBy('purchase.clientId')
+      .getRawMany<{ clientId: string; count: string }>();
+
+    return rows.reduce<Record<ClientId, number>>((acc, row) => {
+      acc[row.clientId] = Number(row.count);
+      return acc;
+    }, {});
+  }
+
+  public async getPurchaseCountsByBookIds(
+    bookIds: BookId[],
+  ): Promise<Record<BookId, number>> {
+    if (bookIds.length === 0) {
+      return {};
+    }
+
+    const rows = await this.purchaseRepository
+      .createQueryBuilder('purchase')
+      .select('purchase.bookId', 'bookId')
+      .addSelect('COUNT(purchase.id)', 'count')
+      .where('purchase.bookId IN (:...bookIds)', { bookIds })
+      .groupBy('purchase.bookId')
+      .getRawMany<{ bookId: string; count: string }>();
+
+    return rows.reduce<Record<BookId, number>>((acc, row) => {
+      acc[row.bookId] = Number(row.count);
+      return acc;
+    }, {});
   }
 
   public async createPurchase(

@@ -11,5 +11,6 @@ import { PurchaseService } from './purchase.service';
   imports: [TypeOrmModule.forFeature([PurchaseEntity, ClientEntity, BookEntity])],
   controllers: [PurchaseController],
   providers: [PurchaseRepository, PurchaseService],
+  exports: [PurchaseService],
 })
 export class PurchaseModule {}

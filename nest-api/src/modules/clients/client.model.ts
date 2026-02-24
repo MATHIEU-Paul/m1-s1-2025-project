@@ -1,3 +1,4 @@
+import { ClientPurchaseDetailsModel } from '../purchases/purchase.model';
 import { ClientId } from './client.entity';
 
 export type ClientModel = {
@@ -8,11 +9,19 @@ export type ClientModel = {
   imagePath?: string;
 };
 
+export type ClientDetailsModel = ClientModel & {
+  purchases: ClientPurchaseDetailsModel[];
+};
+
+export type ClientWithPurchaseCountModel = ClientModel & {
+  purchaseCount: number;
+};
+
 export type CreateClientModel = {
   firstName: string;
   lastName: string;
   email?: string;
-  imagePath?: string;
+  image?: string;
 };
 
 export type UpdateClientModel = Partial<CreateClientModel>;
@@ -25,5 +34,5 @@ export type FilterClientsModel = {
 
 export type GetClientsModel = {
   totalCount: number;
-  data: ClientModel[];
+  data: ClientWithPurchaseCountModel[];
 };

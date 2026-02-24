@@ -8,6 +8,23 @@ export type PurchaseModel = {
   purchaseDate: string;
 };
 
+export type ClientPurchaseDetailsModel = {
+  id: string;
+  bookId: BookId;
+  bookTitle: string;
+  bookAuthor: string;
+  bookCoverImage?: string;
+  purchaseDate: string;
+};
+
+export type BookPurchaseDetailsModel = {
+  id: string;
+  clientId: ClientId;
+  clientFirstName: string;
+  clientLastName: string;
+  purchaseDate: string;
+};
+
 export type CreatePurchaseModel = {
   clientId: ClientId;
   bookId: BookId;

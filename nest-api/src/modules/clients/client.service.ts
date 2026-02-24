@@ -1,25 +1,54 @@
 import { Injectable } from '@nestjs/common';
+import { PurchaseService } from '../purchases/purchase.service';
 import { ClientId } from './client.entity';
 import {
-    ClientModel,
-    CreateClientModel,
-    FilterClientsModel,
-    UpdateClientModel,
+  ClientDetailsModel,
+  ClientModel,
+  ClientWithPurchaseCountModel,
+  CreateClientModel,
+  FilterClientsModel,
+  UpdateClientModel,
 } from './client.model';
 import { ClientRepository } from './client.repository';
 
 @Injectable()
 export class ClientService {
-  constructor(private readonly clientRepository: ClientRepository) {}
+  constructor(
+    private readonly clientRepository: ClientRepository,
+    private readonly purchaseService: PurchaseService,
+  ) {}
 
   public async getAllClients(
     params?: FilterClientsModel,
-  ): Promise<[ClientModel[], number]> {
-    return this.clientRepository.getAllClients(params);
+  ): Promise<[ClientWithPurchaseCountModel[], number]> {
+    const [clients, totalCount] = await this.clientRepository.getAllClients(params);
+
+    const purchaseCountsByClientId = await this.purchaseService.getPurchaseCountsByClientIds(
+      clients.map((client) => client.id),
+    );
+
+    const clientsWithCount = clients.map((client) => ({
+      ...client,
+      purchaseCount: purchaseCountsByClientId[client.id] ?? 0,
+    }));
+
+    return [clientsWithCount, totalCount];
   }
 
-  public async getClientById(id: ClientId): Promise<ClientModel | undefined> {
-    return this.clientRepository.getClientById(id);
+  public async getClientById(
+    id: ClientId,
+  ): Promise<ClientDetailsModel | undefined> {
+    const client = await this.clientRepository.getClientById(id);
+    if (!client) {
+      return undefined;
+    }
+
+    const purchases = await this.purchaseService.getPurchasesByClientId(id);
+
+    return {
+      ...client,
+      purchases,
+    };
   }
 
   public async createClient(client: CreateClientModel): Promise<ClientModel> {

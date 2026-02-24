@@ -4,6 +4,7 @@ export type ClientModel = {
   lastName: string
   email?: string
   imagePath?: string
+  purchaseCount?: number
 }
 
 export type CreateClientModel = {
@@ -21,4 +22,6 @@ export type ClientPurchase = {
   bookTitle: string
   bookAuthor: string
   purchaseDate: string
+  bookCoverImage?: string
 }
+

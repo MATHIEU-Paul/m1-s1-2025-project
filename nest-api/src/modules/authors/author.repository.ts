@@ -48,7 +48,7 @@ export class AuthorRepository {
         books: {
           id: true,
           title: true,
-          imagePath: true,
+          coverPath: true,
         },
       },
     });

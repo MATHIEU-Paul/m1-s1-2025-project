@@ -1,9 +1,9 @@
 import {
-    CheckOutlined,
-    CloseOutlined,
-    DeleteOutlined,
-    EditOutlined,
-    ExclamationCircleOutlined,
+  CheckOutlined,
+  CloseOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { Badge, Button, Col, Modal, Row } from 'antd'
@@ -81,12 +81,12 @@ export function ClientListItem({ client, onDelete, onUpdate }: ClientListItemPro
       </Col>
       <Col span={9} style={{ margin: 'auto 0' }}>
         <Badge
-          count={0}
+          count={client.purchaseCount || 0}
           showZero
           color="blue"
           style={{ marginRight: '1rem' }}
         />
-        {0 <= 1 ? 'book purchased' : 'books purchased'}
+        {(client.purchaseCount || 0) <= 1 ? 'book purchased' : 'books purchased'}
       </Col>
       <Col
         span={3}

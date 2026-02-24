@@ -1,7 +1,8 @@
 import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Button, Card, Input, List, Skeleton, Space, Typography } from 'antd'
+import { Button, Card, Col, Image, Input, List, Row, Skeleton, Space, Typography } from 'antd'
 import { useEffect, useState } from 'react'
+import { API_BASE_URL } from '../../config/api'
 import { useClientDetailsProvider } from '../providers/useClientDetailsProvider'
 
 interface ClientDetailsProps {
@@ -106,9 +107,53 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
             No books purchased yet
           </Typography.Text>
         ) : (
-            <List></List> // Placeholder for future implementation of purchase list
+          <List
+            dataSource={purchases}
+            renderItem={(purchase) => (
+              <List.Item style={{ marginBottom: '1rem', borderBottom: '1px solid #f0f0f0' }}>
+                <Row gutter={16} style={{ width: '100%' }}>
+                  {purchase.bookCoverImage && (
+                    <Col span={4}>
+                      <Image
+                        src={API_BASE_URL + purchase.bookCoverImage}
+                        alt={purchase.bookTitle + ' cover'}
+                        style={{ maxWidth: '100px', borderRadius: '4px' }}
+                        preview={false}
+                      />
+                    </Col>
+                  )}
+                  <Col span={purchase.bookCoverImage ? 20 : 24}>
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                      <div>
+                        <Typography.Text strong>Book Title:</Typography.Text>
+                        <Typography.Text style={{ marginLeft: '0.5rem' }}>
+                          {purchase.bookTitle}
+                        </Typography.Text>
+                      </div>
+                      <div>
+                        <Typography.Text strong>Author:</Typography.Text>
+                        <Typography.Text style={{ marginLeft: '0.5rem' }}>{purchase.bookAuthor}</Typography.Text>
+                      </div>
+                      <div>
+                        <Typography.Text strong>Purchase Date:</Typography.Text>
+                        <Typography.Text style={{ marginLeft: '0.5rem' }}>
+                          {new Date(purchase.purchaseDate).toLocaleDateString()}
+                        </Typography.Text>
+                      </div>
+                      <div>
+                        <Link to="/books/$bookId" params={{ bookId: purchase.bookId }}>
+                          See Book Details
+                        </Link>
+                      </div>
+                    </Space>
+                  </Col>
+                </Row>
+              </List.Item>
+            )}
+          />
         )}
       </Card>
     </Space>
   )
 }
+

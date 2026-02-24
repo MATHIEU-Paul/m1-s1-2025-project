@@ -10,7 +10,7 @@ export type AuthorModel = {
 export type AuthorBookModel = {
   id: string;
   title: string;
-  imagePath?: string;
+  coverPath?: string;
 };
 
 export type AuthorWithBooksModel = AuthorModel & {
@@ -24,7 +24,7 @@ export type AuthorWithBookCountModel = AuthorModel & {
 export type CreateAuthorModel = {
   firstName: string;
   lastName: string;
-  imagePath?: string;
+  image?: string;
 };
 
 export type UpdateAuthorModel = Partial<CreateAuthorModel>;

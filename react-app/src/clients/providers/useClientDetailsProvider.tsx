@@ -11,9 +11,13 @@ export const useClientDetailsProvider = (id: string) => {
     setIsLoading(true)
     fetch(`${API_BASE_URL}/clients/${id}`)
       .then(response => response.json())
-      .then(data => {
+      .then((data: ClientModel & { purchases: ClientPurchase[] }) => {
         setClient(data)
-        // TODO: fetch purchases for this client and setPurchases(data)
+        setPurchases(data.purchases || [])
+      })
+      .catch(err => {
+        console.error(err)
+        setClient(null)
         setPurchases([])
       })
       .finally(() => setIsLoading(false))
