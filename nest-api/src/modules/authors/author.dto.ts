@@ -9,7 +9,7 @@ export class CreateAuthorDto {
 
   @IsString()
   @IsOptional()
-  imagePath?: string;
+  image?: string;
 }
 
 export class UpdateAuthorDto {
@@ -23,5 +23,5 @@ export class UpdateAuthorDto {
 
   @IsString()
   @IsOptional()
-  imagePath?: string;
+  image?: string;
 }

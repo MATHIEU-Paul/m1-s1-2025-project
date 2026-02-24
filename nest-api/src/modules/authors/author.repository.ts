@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { deleteImage, saveImage } from 'src/utils/image';
 import { Repository } from 'typeorm';
 import { AuthorEntity, AuthorId } from './author.entity';
 import {
@@ -63,18 +64,56 @@ export class AuthorRepository {
   }
 
   public async createAuthor(author: CreateAuthorModel): Promise<AuthorModel> {
-    return this.authorRepository.save(this.authorRepository.create(author));
+    const { image, ...newAuthor } = author;
+
+    const createdAuthor = await this.authorRepository.save(
+      this.authorRepository.create(newAuthor),
+    );
+
+    if (!image) {
+      return createdAuthor;
+    }
+
+    const imagePath = saveImage(image, 'authors', createdAuthor.id);
+    await this.authorRepository.update(createdAuthor.id, { imagePath });
+
+    return {
+      ...createdAuthor,
+      imagePath,
+    };
   }
 
   public async updateAuthor(
     id: AuthorId,
     author: UpdateAuthorModel,
   ): Promise<AuthorModel | undefined> {
-    await this.authorRepository.update(id, author);
+    const oldAuthor = await this.authorRepository.findOne({
+      where: { id },
+    });
+
+    if (!oldAuthor) {
+      return undefined;
+    }
+
+    const { image, ...updates } = author;
+
+    let imagePath = oldAuthor.imagePath;
+    if (image) {
+      imagePath = saveImage(image, 'authors', oldAuthor.id);
+    }
+
+    await this.authorRepository.update(id, {
+      ...updates,
+      imagePath,
+    });
+
     return this.getAuthorById(id);
   }
 
   public async deleteAuthor(id: AuthorId): Promise<void> {
-    await this.authorRepository.delete(id);
+    const result = await this.authorRepository.delete(id);
+    if (result.affected && result.affected > 0) {
+      deleteImage('authors', id);
+    }
   }
 }

@@ -8,10 +8,10 @@ import {
 import { Link } from '@tanstack/react-router'
 import { Badge, Button, Col, Modal, Row } from 'antd'
 import { useState } from 'react'
-import type { ClientModel, UpdateClientModel } from '../ClientModel'
+import type { ClientWithPurchaseCountModel, UpdateClientModel } from '../ClientModel'
 
 interface ClientListItemProps {
-  client: ClientModel
+  client: ClientWithPurchaseCountModel
   onDelete: (id: string) => void
   onUpdate: (id: string, input: UpdateClientModel) => void
 }

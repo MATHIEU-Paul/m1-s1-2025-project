@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
-import type { ClientModel, ClientPurchase, ClientWithPurchasesModel } from '../ClientModel'
+import type {
+  ClientModel,
+  ClientPurchase,
+  ClientWithPurchasesModel,
+  UpdateClientModel,
+} from '../ClientModel'
 
 export const useClientDetailsProvider = (id: string) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -23,7 +28,7 @@ export const useClientDetailsProvider = (id: string) => {
       .finally(() => setIsLoading(false))
   }
 
-  const updateClient = (updates: Partial<ClientModel>) => {
+  const updateClient = (updates: UpdateClientModel) => {
     if (!client) return
 
     fetch(`${API_BASE_URL}/clients/${id}`, {

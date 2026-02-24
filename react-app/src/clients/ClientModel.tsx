@@ -12,7 +12,7 @@ export type ClientPurchase = {
   bookTitle: string
   bookAuthor: string
   purchaseDate: string
-  bookCoverImage?: string
+  bookCoverPath?: string
 }
 
 export type ClientWithPurchaseCountModel = ClientModel & {
@@ -27,7 +27,7 @@ export type CreateClientModel = {
   firstName: string
   lastName: string
   email?: string
-  imagePath?: string
+  image?: string
 }
 
 export type UpdateClientModel = Partial<CreateClientModel>

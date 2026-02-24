@@ -112,17 +112,17 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
             renderItem={(purchase) => (
               <List.Item style={{ marginBottom: '1rem', borderBottom: '1px solid #f0f0f0' }}>
                 <Row gutter={16} style={{ width: '100%' }}>
-                  {purchase.bookCoverImage && (
+                  {purchase.bookCoverPath && (
                     <Col span={4}>
                       <Image
-                        src={API_BASE_URL + purchase.bookCoverImage}
+                        src={API_BASE_URL + purchase.bookCoverPath}
                         alt={purchase.bookTitle + ' cover'}
                         style={{ maxWidth: '100px', borderRadius: '4px' }}
                         preview={false}
                       />
                     </Col>
                   )}
-                  <Col span={purchase.bookCoverImage ? 20 : 24}>
+                  <Col span={purchase.bookCoverPath ? 20 : 24}>
                     <Space direction="vertical" style={{ width: '100%' }}>
                       <div>
                         <Typography.Text strong>Book Title:</Typography.Text>

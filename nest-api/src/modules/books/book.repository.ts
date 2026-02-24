@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { saveImage } from 'src/utils/image';
+import { deleteImage, saveImage } from 'src/utils/image';
 import { DataSource, Repository } from 'typeorm';
 import { AuthorEntity } from '../authors/author.entity';
 import {
@@ -57,24 +57,36 @@ export class BookRepository {
     };
   }
 
-  public async createBook(newBook: CreateBookModel): Promise<BookModel> {
+  public async createBook(book: CreateBookModel): Promise<BookModel> {
     const author = await this.authorRepository.findOne({
-      where: { id: newBook.authorId },
+      where: { id: book.authorId },
     });
 
     if (!author) {
       throw new Error('Author not found');
     }
 
-    let coverPath: string | undefined = undefined;
-    if (newBook.coverImage) {
-      coverPath = saveImage(newBook.coverImage, 'books', newBook.authorId);
+    const { coverImage, ...newBook } = book;
+
+    const createdBook = await this.bookRepository.save(
+      this.bookRepository.create(newBook),
+    );
+
+    if (!coverImage) {
+      return {
+        ...createdBook,
+        author,
+      };
     }
 
-    return this.bookRepository.save(this.bookRepository.create({
-      ...newBook,
+    const coverPath = saveImage(coverImage, 'books', createdBook.id);
+    await this.bookRepository.update(createdBook.id, { coverPath });
+
+    return {
+      ...createdBook,
+      author,
       coverPath,
-    }));
+    };
   }
 
   public async updateBook(
@@ -89,16 +101,23 @@ export class BookRepository {
       return undefined;
     }
 
+    const { coverImage, ...updates } = book;
+
     let coverPath: string | undefined = oldBook.coverPath;
-    if (book.coverImage) {
-      coverPath = saveImage(book.coverImage, 'books', oldBook.authorId);
+    if (coverImage) {
+      coverPath = saveImage(coverImage, 'books', oldBook.id);
     }
 
-    await this.bookRepository.update(id, { ...book, coverPath });
+    await this.bookRepository.update(id, { ...updates, coverPath });
+
+    return this.getBookById(id);
   }
 
   public async deleteBook(id: BookId): Promise<void> {
-    await this.bookRepository.delete(id);
+    const result = await this.bookRepository.delete(id);
+    if (result.affected && result.affected > 0) {
+      deleteImage('books', id);
+    }
   }
 
   public async deleteBooks(ids: BookId[]): Promise<void> {
@@ -107,5 +126,7 @@ export class BookRepository {
         ids.map((id) => transactionalEntityManager.delete(BookEntity, { id })),
       );
     });
+
+    ids.forEach((id) => deleteImage('books', id));
   }
 }
