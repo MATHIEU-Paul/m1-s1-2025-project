@@ -1,0 +1,55 @@
+import { PlusOutlined } from '@ant-design/icons'
+import { Button, Input, Modal, Space } from 'antd'
+import { useState } from 'react'
+import { ImageInput } from '../../components/ImageInput'
+import type { CreateAuthorModel } from '../AuthorModel'
+
+interface CreateAuthorModalProps {
+  onCreate: (author: CreateAuthorModel) => void
+}
+
+export function CreateAuthorModal({ onCreate }: CreateAuthorModalProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [image, setImage] = useState<string | undefined>(undefined)
+
+  const onClose = () => {
+    setFirstName('')
+    setLastName('')
+    setImage(undefined)
+    setIsOpen(false)
+  }
+
+  return (
+    <>
+      <Button icon={<PlusOutlined />} type="primary" onClick={() => setIsOpen(true)}>
+        Create Author
+      </Button>
+      <Modal
+        open={isOpen}
+        onCancel={onClose}
+        onOk={() => {
+          onCreate({ firstName, lastName, image })
+          onClose()
+        }}
+        okButtonProps={{ disabled: !firstName?.length || !lastName?.length }}
+        title="Create New Author"
+      >
+        <Space direction="vertical" style={{ width: '100%' }}>
+          <Input
+            placeholder="First Name"
+            value={firstName}
+            onChange={e => setFirstName(e.target.value)}
+          />
+          <Input
+            placeholder="Last Name"
+            value={lastName}
+            onChange={e => setLastName(e.target.value)}
+          />
+          <ImageInput onImageChange={newImage => setImage(newImage)} />
+        </Space>
+      </Modal>
+    </>
+  )
+}

@@ -10,7 +10,7 @@ export const useAuthorProvider = () => {
     axios
       .get(`${API_BASE_URL}/authors`)
       .then(response => {
-        setAuthors(response.data) // Le backend renvoie directement le tableau ici
+        setAuthors(response.data) 
       })
       .catch(err => console.error(err))
   }
