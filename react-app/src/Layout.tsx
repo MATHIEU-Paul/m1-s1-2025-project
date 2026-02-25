@@ -1,18 +1,20 @@
 import { BookOutlined, HomeOutlined, InfoOutlined, UserOutlined, TeamOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Space, type MenuProps } from 'antd'
+import { Space, Switch, type MenuProps } from 'antd'
 import Menu from 'antd/es/menu/menu'
 import { Route as aboutRoute } from './routes/about'
 import { Route as booksRoute } from './routes/books'
 import { Route as clientsRoute } from './routes/clients'
 import { Route as indexRoute } from './routes/index'
 import { Route as authorsRoute } from './routes/authors'
+import { useTheme } from './providers/ThemeProvider'
 
 interface LayoutProps {
   children: React.ReactNode
 }
 
 export function Layout({ children }: LayoutProps) {
+  const { isDarkMode, toggleTheme } = useTheme()
   const items: Required<MenuProps>['items'] = [
     {
       label: <Link to={indexRoute.to}>Home</Link>,
@@ -51,14 +53,22 @@ export function Layout({ children }: LayoutProps) {
     >
       <div
         style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           textAlign: 'left',
           width: '100%',
           backgroundColor: '#395E66',
           color: 'white',
+          paddingRight: '3rem',
         }}
       >
-        <h2 style={{ marginTop: '0' }}>Babel&apos;s Library</h2>
-        <Menu mode="horizontal" items={items} />
+        <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+        <h2 style={{ margin: '0 1rem', padding: '1rem', whiteSpace: 'nowrap' }}>Babel's Library</h2>
+        <Menu theme="dark" mode="horizontal" items={items} style={{ backgroundColor: 'transparent', flexGrow: 1, borderBottom: 'none' }}  />
+      </div>
+        <Switch checked={isDarkMode} onChange={toggleTheme} checkedChildren="🌙" unCheckedChildren="☀️" />
+
       </div>
       <div style={{ width: '100%', overflowY: 'scroll' }}>{children}</div>
     </Space>

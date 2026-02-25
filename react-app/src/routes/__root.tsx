@@ -1,11 +1,13 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { Layout } from '../Layout'
-
+import { ThemeProvider } from '../providers/ThemeProvider' 
 const RootLayout = () => {
   return (
-    <Layout>
-      <Outlet />
-    </Layout>
+    <ThemeProvider>
+      <Layout>
+        <Outlet />
+      </Layout>
+    </ThemeProvider>
   )
 }
 
