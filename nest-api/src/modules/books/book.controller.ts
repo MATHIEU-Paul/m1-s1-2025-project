@@ -8,14 +8,22 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { CreateBookDto, GetBooksDto, UpdateBookDto } from './book.dto';
+import { BookMetadataService } from './book-metadata.service';
+import {
+  CreateBookDto,
+  GetBooksDto,
+  UpdateBookDto
+} from './book.dto';
 import { GetBooksModel } from './book.model';
 import { BookService } from './book.service';
 import { BookId } from './entities/book.entity';
 
 @Controller('books')
 export class BookController {
-  constructor(private readonly bookService: BookService) {}
+  constructor(
+    private readonly bookService: BookService,
+    private readonly bookMetadataService: BookMetadataService,
+  ) {}
 
   @Get()
   async getBooks(@Query() input: GetBooksDto): Promise<GetBooksModel> {
@@ -34,6 +42,16 @@ export class BookController {
       data: books,
       totalCount,
     };
+  }
+
+  @Get('types')
+  public async getBookTypes() {
+    return this.bookMetadataService.getBookTypes();
+  }
+  
+  @Get('genres')
+  public async getGenres() {
+    return this.bookMetadataService.getGenres();
   }
 
   @Get(':id')

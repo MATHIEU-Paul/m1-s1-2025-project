@@ -1,3 +1,8 @@
+export type BookMetadataModel = {
+  id: string
+  name: string
+}
+
 export type BookModel = {
   id: string
   title: string
@@ -7,15 +12,9 @@ export type BookModel = {
     firstName: string
     lastName: string
   }
-  numberpages: number
-  booktype: {
-    id :string
-    type : string
-  }
-  genre : {
-    id : string
-    genre : string
-  }
+  numberPages?: number
+  bookType?: BookMetadataModel
+  genre?: BookMetadataModel
   coverPath?: string
 }
 
@@ -37,13 +36,13 @@ export type BookWithPurchasesModel = BookModel & {
 }
 
 export type CreateBookModel = {
-  authorId: string
   title: string
   yearPublished: number
-  numberpages: number
-  booktypeId: string
-  genreId : string
+  numberPages?: number
   coverImage?: string
+  authorId: string
+  bookTypeId?: string
+  genreId?: string
 }
 
 export type UpdateBookModel = Partial<CreateBookModel>

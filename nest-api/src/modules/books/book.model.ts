@@ -1,18 +1,29 @@
-import { TypedEventEmitter } from 'typeorm';
 import { AuthorId } from '../authors/author.entity';
 import { AuthorModel } from '../authors/author.model';
 import { BookPurchaseDetailsModel } from '../purchases/purchase.model';
 import { BookId } from './entities/book.entity';
+import { BookTypeId } from './entities/booktype.entity';
+import { GenreId } from './entities/genre.entity';
+
+export type BookTypeModel = {
+  id: BookTypeId;
+  name: string;
+};
+
+export type GenreModel = {
+  id: GenreId;
+  name: string;
+};
 
 export type BookModel = {
   id: BookId;
   title: string;
-  author: AuthorModel;
   yearPublished: number;
-  numberpages: number;
-  // booktype : TypeModel;
-  // genre : GenreModel;
+  numberPages?: number;
   coverPath?: string;
+  author: AuthorModel;
+  bookType?: BookTypeModel;
+  genre?: GenreModel;
 };
 
 export type BookDetailsModel = BookModel & {
@@ -25,12 +36,20 @@ export type BookWithPurchaseCountModel = BookModel & {
 
 export type CreateBookModel = {
   title: string;
-  authorId: AuthorId;
   yearPublished: number;
-  numberpages: number;
-  // booktype: TypeModel;
-  // genre: GenreModel;
+  numberPages?: number;
   coverImage?: string;
+  authorId: AuthorId;
+  bookTypeId?: BookTypeId;
+  genreId?: GenreId;
+};
+
+export type CreateBookTypeModel = {
+  name: string;
+};
+
+export type CreateGenreModel = {
+  name: string;
 };
 
 export type UpdateBookModel = Partial<CreateBookModel>;

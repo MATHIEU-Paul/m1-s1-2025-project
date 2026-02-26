@@ -2,9 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from 'typeorm';
 
 export type GenreId = string & { __brand: 'Genre' };

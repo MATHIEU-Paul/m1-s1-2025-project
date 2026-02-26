@@ -22,16 +22,24 @@ export class BookEntity extends BaseEntity {
 
   @Column({ name: 'year_published', type: 'int' , nullable: true})
   yearPublished: number;
+  
+  @Column({ name: 'number_pages', type: 'int', nullable: true })
+  numberPages: number;
+
+  @Column({ name: 'cover_path', type: 'varchar', nullable: true })
+  coverPath?: string;
 
   @Column({ name: 'author_id', type: 'uuid' })
   authorId: AuthorId;
 
-  @Column({ name: 'numberpages', type: 'int' })
-  numberpages: number;
+  @ManyToOne(() => AuthorEntity, (author) => author.books, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'author_id' })
+  author: AuthorEntity;
 
   @ManyToOne(() => BookTypeEntity, { nullable: true })
   @JoinColumn({ name: 'book_type_id' })
   bookType?: BookTypeEntity;
+
   @Column({ name: 'book_type_id', type: 'uuid', nullable: true })
   bookTypeId?: BookTypeId;
 
@@ -41,11 +49,4 @@ export class BookEntity extends BaseEntity {
 
   @Column({ name: 'genre_id', type: 'uuid', nullable: true })
   genreId?: GenreId;
-
-  @Column({ name: 'cover_path', type: 'varchar', nullable: true })
-  coverPath?: string;
-
-  @ManyToOne(() => AuthorEntity, (author) => author.books, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'author_id' })
-  author: AuthorEntity;
 }

@@ -1,12 +1,11 @@
 import { IsInt, IsOptional, IsString, IsUUID, Max, Min } from 'class-validator';
 import type { AuthorId } from '../authors/author.entity';
+import type { BookTypeId } from './entities/booktype.entity';
+import type { GenreId } from './entities/genre.entity';
 
 export class CreateBookDto {
   @IsString()
   title: string;
-
-  @IsUUID(4)
-  authorId: AuthorId;
 
   @IsInt()
   @Min(1500)
@@ -14,19 +13,25 @@ export class CreateBookDto {
   yearPublished: number;
 
   @IsInt()
-  @Min(1)
   @IsOptional()
-  numberpages: number;
-
-  // @IsUUID(4)
-  // BookType : TypeModel;
-
-  // @IsUUID(4)
-  // Genre : GenreModel;
+  @Min(1)
+  @Max(10000)
+  numberPages?: number;
 
   @IsString()
   @IsOptional()
   coverImage?: string;
+
+  @IsUUID(4)
+  authorId: AuthorId;
+
+  @IsUUID(4)
+  @IsOptional()
+  bookTypeId?: BookTypeId;
+
+  @IsUUID(4)
+  @IsOptional()
+  genreId?: GenreId;
 }
 
 export class UpdateBookDto {
@@ -34,10 +39,6 @@ export class UpdateBookDto {
   @IsOptional()
   title: string;
 
-  @IsUUID(4)
-  @IsOptional()
-  authorId: AuthorId;
-
   @IsInt()
   @Min(1500)
   @Max(2025)
@@ -45,21 +46,26 @@ export class UpdateBookDto {
   yearPublished: number;
 
   @IsInt()
+  @IsOptional()
   @Min(1)
-  @IsOptional()
-  numberpages: number;
-
-  @IsUUID(4)
-  @IsOptional()
-  bookTypeId: string;  
-
-  @IsUUID(4)
-  @IsOptional()
-  genreId: string;  
+  @Max(10000)
+  numberPages?: number;
 
   @IsString()
   @IsOptional()
   coverImage?: string;
+
+  @IsUUID(4)
+  @IsOptional()
+  authorId: AuthorId;
+
+  @IsUUID(4)
+  @IsOptional()
+  bookTypeId?: BookTypeId;
+
+  @IsUUID(4)
+  @IsOptional()
+  genreId?: GenreId;  
 }
 
 export class GetBooksDto {
