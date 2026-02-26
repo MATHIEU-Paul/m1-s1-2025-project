@@ -16,10 +16,17 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
   const [coverImage, setCoverImage] = useState<string | undefined>(undefined)
   const [authorId, setAuthorId] = useState<string | undefined>(undefined)
   const { authors, loadAuthors } = useBookAuthorsProviders()
+  const [numberpages, setNumberPages] = useState(0)
+  // const [genres, setGenres] = useState<{id: string, name: string}[]>([]);
+  // const [bookTypes, setBookTypes] = useState<{id: string, name: string}[]>([]);
+  // const [genreId, setGenreId] = useState<string | undefined>(undefined);
+  // const [bookTypeId, setBookTypeId] = useState<string | undefined>(undefined);
+
 
   const onClose = () => {
     setTitle('')
     setYearPublished(0)
+    setNumberPages(0)
     setCoverImage(undefined)
     setIsOpen(false)
   }
@@ -27,6 +34,8 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
   useEffect(() => {
     if (isOpen) {
       loadAuthors()
+      //fetchGenres().then(setGenres);
+      //fetchBookTypes().then(setBookTypes);
     }
   }, [isOpen])
 
@@ -48,7 +57,10 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
             yearPublished,
             coverImage,
             authorId: authorId!,
-          })
+            numberpages,
+            //bookType: bookType,
+            //genre,
+            })
           onClose()
         }}
         okButtonProps={{
@@ -77,6 +89,16 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
             value={yearPublished}
             onChange={e => setYearPublished(Number(e.target.value))}
           />
+          {/* <Select
+            placeholder="Sélectionner un genre"
+            options={genres.map(g => ({ label: g.name, value: g.id }))}
+            onChange={setGenreId}
+          />
+          <Select
+            placeholder="Type de livre"
+            options={bookTypes.map(t => ({ label: t.name, value: t.id }))}
+            onChange={setBookTypeId}
+          /> */}
           <ImageInput
             onImageChange={newImage => setCoverImage(newImage)}
           />

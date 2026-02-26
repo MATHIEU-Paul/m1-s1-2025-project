@@ -1,3 +1,4 @@
+import { TypedEventEmitter } from 'typeorm';
 import { AuthorId } from '../authors/author.entity';
 import { AuthorModel } from '../authors/author.model';
 import { BookPurchaseDetailsModel } from '../purchases/purchase.model';
@@ -8,6 +9,9 @@ export type BookModel = {
   title: string;
   author: AuthorModel;
   yearPublished: number;
+  numberpages: number;
+  // booktype : TypeModel;
+  // genre : GenreModel;
   coverPath?: string;
 };
 
@@ -23,6 +27,9 @@ export type CreateBookModel = {
   title: string;
   authorId: AuthorId;
   yearPublished: number;
+  numberpages: number;
+  // booktype: TypeModel;
+  // genre: GenreModel;
   coverImage?: string;
 };
 

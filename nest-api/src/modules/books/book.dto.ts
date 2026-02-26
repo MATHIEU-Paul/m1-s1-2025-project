@@ -13,6 +13,17 @@ export class CreateBookDto {
   @Max(2025)
   yearPublished: number;
 
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  numberpages: number;
+
+  // @IsUUID(4)
+  // BookType : TypeModel;
+
+  // @IsUUID(4)
+  // Genre : GenreModel;
+
   @IsString()
   @IsOptional()
   coverImage?: string;
@@ -32,6 +43,19 @@ export class UpdateBookDto {
   @Max(2025)
   @IsOptional()
   yearPublished: number;
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  numberpages: number;
+
+  @IsUUID(4)
+  @IsOptional()
+  bookTypeId: string;  
+
+  @IsUUID(4)
+  @IsOptional()
+  genreId: string;  
 
   @IsString()
   @IsOptional()

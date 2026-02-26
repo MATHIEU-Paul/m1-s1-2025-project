@@ -7,6 +7,15 @@ export type BookModel = {
     firstName: string
     lastName: string
   }
+  numberpages: number
+  booktype: {
+    id :string
+    type : string
+  }
+  genre : {
+    id : string
+    genre : string
+  }
   coverPath?: string
 }
 
@@ -31,6 +40,9 @@ export type CreateBookModel = {
   authorId: string
   title: string
   yearPublished: number
+  numberpages: number
+  booktypeId: string
+  genreId : string
   coverImage?: string
 }
 

@@ -32,6 +32,9 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
         title: book.title,
         authorId: book.author.id,
         yearPublished: book.yearPublished,
+        numberpages: book.numberpages,
+        // booktypeId: book.booktype.id,
+        // genreId: book.genre.id,
       })
       setIsModalOpen(true)
     }
@@ -159,6 +162,27 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
           >
             <InputNumber style={{ width: '100%' }} placeholder="YYYY" />
           </Form.Item>
+
+          <Form.Item
+            name="numberpages"
+            label="Number of Pages"
+            rules={[{ required: false, message: 'Please enter the number of pages' }]}
+          >
+            <InputNumber style={{ width: '100%' }} placeholder="Enter number of pages" />
+          </Form.Item>
+
+          {/* <Form.Item
+            name="bookType" label="Book Type"
+            rules={[{ required: false, message: 'Please select a book type' }]}
+          >
+            <Select 
+              placeholder="Select a book type"
+              options={bookTypes.map(bt => ({
+                label: bt.name,
+                value: bt.id
+              }))}
+            />
+          </Form.Item> */}
         </Form>
       </Modal>
 
