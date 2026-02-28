@@ -6,8 +6,9 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Badge, Button, Col, Modal, Row } from 'antd'
+import { Avatar, Badge, Button, Col, Modal, Row } from 'antd'
 import { useState } from 'react'
+import { API_BASE_URL } from '../../config/api'
 import type { ClientWithPurchaseCountModel, UpdateClientModel } from '../ClientModel'
 
 interface ClientListItemProps {
@@ -66,17 +67,30 @@ export function ClientListItem({ client, onDelete, onUpdate }: ClientListItemPro
             <input value={lastName} onChange={e => setLastName(e.target.value)} />
           </div>
         ) : (
-          <Link
-            to={`/clients/$clientId`}
-            params={{ clientId: client.id }}
+          <div
             style={{
-              margin: 'auto 0',
-              textAlign: 'left',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '.75rem',
             }}
           >
-            <span style={{ fontWeight: 'bold' }}>{client.firstName}</span>{' '}
-            <span style={{ fontWeight: 'bold' }}>{client.lastName}</span>
-          </Link>
+            {client.imagePath ? (
+              <Avatar src={API_BASE_URL + client.imagePath} />
+            ) : (
+              <Avatar>{client.firstName[0]}{client.lastName[0]}</Avatar>
+            )}
+            <Link
+              to={`/clients/$clientId`}
+              params={{ clientId: client.id }}
+              style={{
+                margin: 'auto 0',
+                textAlign: 'left',
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>{client.firstName}</span>{' '}
+              <span style={{ fontWeight: 'bold' }}>{client.lastName}</span>
+            </Link>
+          </div>
         )}
       </Col>
       <Col span={9} style={{ margin: 'auto 0' }}>

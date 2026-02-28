@@ -6,8 +6,9 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Button, Col, Modal, Row } from 'antd'
+import { Avatar, Button, Col, Modal, Row } from 'antd'
 import { useState } from 'react'
+import { API_BASE_URL } from '../../config/api'
 import type { BookWithPurchaseCountModel, UpdateBookModel } from '../BookModel'
 
 interface BookListItemProps {
@@ -61,17 +62,35 @@ export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
         {isEditing ? (
           <input value={title} onChange={e => setTitle(e.target.value)} />
         ) : (
-          <Link
-            to={`/books/$bookId`}
-            params={{ bookId: book.id }}
+          <div
             style={{
-              margin: 'auto 0',
-              textAlign: 'left',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '.75rem',
             }}
           >
-            <span style={{ fontWeight: 'bold' }}>{book.title}</span> -{' '}
-            {book.yearPublished} ({book.purchaseCount} purchase{book.purchaseCount > 1 ? 's' : ''})
-          </Link>
+            <Avatar
+              shape="square"
+              src={book.coverPath ? API_BASE_URL + book.coverPath : undefined}
+              style={{
+                width: '34px',
+                height: '48px',
+                borderRadius: '6px',
+                flexShrink: 0,
+              }}
+            />
+            <Link
+              to={`/books/$bookId`}
+              params={{ bookId: book.id }}
+              style={{
+                margin: 'auto 0',
+                textAlign: 'left',
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>{book.title}</span> -{' '}
+              {book.yearPublished} ({book.purchaseCount} purchase{book.purchaseCount > 1 ? 's' : ''})
+            </Link>
+          </div>
         )}
       </Col>
       <Col span={9} style={{ margin: 'auto 0' }}>

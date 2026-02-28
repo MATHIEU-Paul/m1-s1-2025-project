@@ -1,6 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, Input, Modal, Space } from 'antd'
+import { Button, Input, Modal, Space, Typography } from 'antd'
 import { useState } from 'react'
+import { ImageInput } from '../../components/ImageInput'
 import type { CreateClientModel } from '../ClientModel'
 
 interface CreateClientModalProps {
@@ -8,15 +9,18 @@ interface CreateClientModalProps {
 }
 
 export function CreateClientModal({ onCreate }: CreateClientModalProps) {
+  const { Text } = Typography
   const [isOpen, setIsOpen] = useState(false)
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
+  const [image, setImage] = useState<string | undefined>(undefined)
 
   const onClose = () => {
     setFirstName('')
     setLastName('')
     setEmail('')
+    setImage(undefined)
     setIsOpen(false)
   }
 
@@ -25,6 +29,7 @@ export function CreateClientModal({ onCreate }: CreateClientModalProps) {
       firstName,
       lastName,
       email: email || undefined,
+      image,
     })
     onClose()
   }
@@ -48,18 +53,21 @@ export function CreateClientModal({ onCreate }: CreateClientModalProps) {
         title="Create New Client"
       >
         <Space direction="vertical" style={{ width: '100%' }}>
+          <Text>First name</Text>
           <Input
             type="text"
             placeholder="First Name"
             value={firstName}
             onChange={e => setFirstName(e.target.value)}
           />
+          <Text>Last name</Text>
           <Input
             type="text"
             placeholder="Last Name"
             value={lastName}
             onChange={e => setLastName(e.target.value)}
           />
+          <Text>Email</Text>
           <Input
             type="email"
             placeholder="Email (optional)"
@@ -67,6 +75,8 @@ export function CreateClientModal({ onCreate }: CreateClientModalProps) {
             onChange={e => setEmail(e.target.value)}
           />
         </Space>
+        <Text>Profile picture</Text>
+        <ImageInput onImageChange={newImage => setImage(newImage)} />
       </Modal>
     </>
   )

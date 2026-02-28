@@ -32,9 +32,9 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
         title: book.title,
         authorId: book.author.id,
         yearPublished: book.yearPublished,
-        numberpages: book.numberpages,
-        // booktypeId: book.booktype.id,
-        // genreId: book.genre.id,
+        numberPages: book.numberPages,
+        booktypeId: book.bookType?.id,
+        genreId: book.genre?.id,
       })
       setIsModalOpen(true)
     }

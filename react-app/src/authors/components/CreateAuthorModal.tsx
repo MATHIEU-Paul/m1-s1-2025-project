@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, Input, Modal, Space } from 'antd'
+import { Button, Input, Modal, Space, Typography } from 'antd'
 import { useState } from 'react'
 import { ImageInput } from '../../components/ImageInput'
 import type { CreateAuthorModel } from '../AuthorModel'
@@ -9,6 +9,7 @@ interface CreateAuthorModalProps {
 }
 
 export function CreateAuthorModal({ onCreate }: CreateAuthorModalProps) {
+  const { Text } = Typography
   const [isOpen, setIsOpen] = useState(false)
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -37,16 +38,19 @@ export function CreateAuthorModal({ onCreate }: CreateAuthorModalProps) {
         title="Create New Author"
       >
         <Space direction="vertical" style={{ width: '100%' }}>
+          <Text>First name</Text>
           <Input
             placeholder="First Name"
             value={firstName}
             onChange={e => setFirstName(e.target.value)}
           />
+          <Text>Last name</Text>
           <Input
             placeholder="Last Name"
             value={lastName}
             onChange={e => setLastName(e.target.value)}
           />
+          <Text>Author image</Text>
           <ImageInput onImageChange={newImage => setImage(newImage)} />
         </Space>
       </Modal>
