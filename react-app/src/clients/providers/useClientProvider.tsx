@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
 import type {
   ClientWithPurchaseCountModel,
@@ -28,7 +28,7 @@ export const useClientProvider = () => {
   const [totalCount, setTotalCount] = useState(0)
   const lastQueryRef = useRef<LoadClientsQuery>(DEFAULT_LOAD_QUERY)
 
-  const loadClients = (query?: Partial<LoadClientsQuery>) => {
+  const loadClients = useCallback((query?: Partial<LoadClientsQuery>) => {
     const effectiveQuery: LoadClientsQuery = {
       ...lastQueryRef.current,
       ...query,
@@ -48,34 +48,43 @@ export const useClientProvider = () => {
         setTotalCount(data.data.totalCount ?? 0)
       })
       .catch(err => console.error(err))
-  }
+  }, [])
 
-  const createClient = (client: CreateClientModel) => {
-    axios
-      .post(`${API_BASE_URL}/clients`, client)
-      .then(() => {
-        loadClients()
-      })
-      .catch(err => console.error(err))
-  }
+  const createClient = useCallback(
+    (client: CreateClientModel) => {
+      axios
+        .post(`${API_BASE_URL}/clients`, client)
+        .then(() => {
+          loadClients()
+        })
+        .catch(err => console.error(err))
+    },
+    [loadClients],
+  )
 
-  const updateClient = (id: string, input: UpdateClientModel) => {
-    axios
-      .put(`${API_BASE_URL}/clients/${id}`, input)
-      .then(() => {
-        loadClients()
-      })
-      .catch(err => console.error(err))
-  }
+  const updateClient = useCallback(
+    (id: string, input: UpdateClientModel) => {
+      axios
+        .put(`${API_BASE_URL}/clients/${id}`, input)
+        .then(() => {
+          loadClients()
+        })
+        .catch(err => console.error(err))
+    },
+    [loadClients],
+  )
 
-  const deleteClient = (id: string) => {
-    axios
-      .delete(`${API_BASE_URL}/clients/${id}`)
-      .then(() => {
-        loadClients()
-      })
-      .catch(err => console.error(err))
-  }
+  const deleteClient = useCallback(
+    (id: string) => {
+      axios
+        .delete(`${API_BASE_URL}/clients/${id}`)
+        .then(() => {
+          loadClients()
+        })
+        .catch(err => console.error(err))
+    },
+    [loadClients],
+  )
 
   return {
     clients,

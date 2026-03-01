@@ -32,7 +32,7 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
 
   useEffect(() => {
     loadClient()
-  }, [id])
+  }, [id, loadClient])
 
   useEffect(() => {
     if (client) {

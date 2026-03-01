@@ -8,7 +8,7 @@ import {
 import { Link } from '@tanstack/react-router'
 import { Space, Switch, type MenuProps } from 'antd'
 import Menu from 'antd/es/menu/menu'
-import { useTheme } from './providers/ThemeProvider'
+import { useTheme } from './providers/useTheme'
 import { Route as aboutRoute } from './routes/about'
 import { Route as authorsRoute } from './routes/authors'
 import { Route as booksRoute } from './routes/books'
@@ -72,7 +72,7 @@ export function Layout({ children }: LayoutProps) {
           <h2
             style={{ margin: '0 1rem', padding: '1rem', whiteSpace: 'nowrap' }}
           >
-            Babel's Library
+            Babel&apos;s Library
           </h2>
           <Menu
             theme="dark"

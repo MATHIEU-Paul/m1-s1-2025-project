@@ -19,7 +19,7 @@ export function PurchaseBookModal({ bookId }: PurchaseBookModalProps) {
     if (isOpen) {
       loadClients()
     }
-  }, [isOpen])
+  }, [isOpen, loadClients])
 
   const onClose = () => {
     setClientId(undefined)

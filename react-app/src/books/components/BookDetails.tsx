@@ -35,7 +35,7 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
 
   useEffect(() => {
     loadBook()
-  }, [id])
+  }, [id, loadBook])
 
   // Open modal and pre-fill fields with current book data
   const showEditModal = () => {

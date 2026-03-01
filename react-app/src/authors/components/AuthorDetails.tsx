@@ -30,7 +30,7 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
 
   useEffect(() => {
     loadAuthor()
-  }, [id])
+  }, [id, loadAuthor])
 
   const showEditModal = () => {
     if (author) {

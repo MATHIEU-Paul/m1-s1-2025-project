@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
 import type {
   ClientModel,
@@ -12,7 +12,7 @@ export const useClientDetailsProvider = (id: string) => {
   const [client, setClient] = useState<ClientModel | null>(null)
   const [purchases, setPurchases] = useState<ClientPurchase[]>([])
 
-  const loadClient = () => {
+  const loadClient = useCallback(() => {
     setIsLoading(true)
     fetch(`${API_BASE_URL}/clients/${id}`)
       .then(response => response.json())
@@ -26,20 +26,23 @@ export const useClientDetailsProvider = (id: string) => {
         setPurchases([])
       })
       .finally(() => setIsLoading(false))
-  }
+  }, [id])
 
-  const updateClient = (updates: UpdateClientModel) => {
-    if (!client) return
+  const updateClient = useCallback(
+    (updates: UpdateClientModel) => {
+      if (!client) return
 
-    fetch(`${API_BASE_URL}/clients/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates),
-    })
-      .then(response => response.json())
-      .then(data => setClient(data))
-      .catch(err => console.error(err))
-  }
+      fetch(`${API_BASE_URL}/clients/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      })
+        .then(response => response.json())
+        .then(data => setClient(data))
+        .catch(err => console.error(err))
+    },
+    [client, id],
+  )
 
   return { isLoading, client, purchases, loadClient, updateClient }
 }

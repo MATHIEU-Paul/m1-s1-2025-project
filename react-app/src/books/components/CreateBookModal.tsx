@@ -41,7 +41,7 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
       loadGenres()
       loadBookTypes()
     }
-  }, [isOpen])
+  }, [isOpen, loadAuthors, loadGenres, loadBookTypes])
 
   return (
     <>

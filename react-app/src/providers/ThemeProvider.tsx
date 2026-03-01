@@ -1,12 +1,6 @@
 import { ConfigProvider, theme } from 'antd'
-import React, { createContext, useContext, useEffect, useState } from 'react'
-
-type ThemeContextType = {
-  isDarkMode: boolean
-  toggleTheme: () => void
-}
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
+import React, { useEffect, useState } from 'react'
+import { ThemeContext } from './theme-context'
 
 //create a provider to manage the theme state and provide it to the rest of the app
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
@@ -36,10 +30,4 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       </ConfigProvider>
     </ThemeContext.Provider>
   )
-}
-
-export const useTheme = () => {
-  const context = useContext(ThemeContext)
-  if (!context) throw new Error('useTheme must be used within a ThemeProvider')
-  return context
 }

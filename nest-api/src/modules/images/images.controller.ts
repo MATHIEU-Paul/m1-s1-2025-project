@@ -6,7 +6,7 @@ import * as path from 'path';
 @Controller('images')
 export class ImagesController {
   @Get(':folder/:filename')
-  async getImage(
+  getImage(
     @Param('folder') folder: string,
     @Param('filename') filename: string,
     @Res() res: Response,
