@@ -1,18 +1,18 @@
 import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import {
-  Avatar,
-  Button,
-  Form,
-  Input,
-  InputNumber,
-  List,
-  message,
-  Modal,
-  Select,
-  Skeleton,
-  Space,
-  Typography,
+    Avatar,
+    Button,
+    Form,
+    Input,
+    InputNumber,
+    List,
+    message,
+    Modal,
+    Select,
+    Skeleton,
+    Space,
+    Typography,
 } from 'antd'
 import { useEffect, useState } from 'react'
 import { getInitials, hasImagePath } from '../../components/avatarFallback'
