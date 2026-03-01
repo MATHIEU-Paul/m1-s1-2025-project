@@ -8,9 +8,14 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { CreateClientDto, GetAllClientsDto, UpdateClientDto } from './client.dto';
+import { parseListQueryParams } from '../../utils/list-query';
+import {
+  CreateClientDto,
+  GetAllClientsDto,
+  UpdateClientDto,
+} from './client.dto';
 import { ClientId } from './client.entity';
-import { FilterClientsModel } from './client.model';
+import { ClientSortField } from './client.model';
 import { ClientService } from './client.service';
 
 @Controller('clients')
@@ -19,20 +24,14 @@ export class ClientController {
 
   @Get()
   async getAllClients(@Query() rawParams: GetAllClientsDto) {
-    const params: FilterClientsModel = {
-      limit: rawParams.limit,
-      offset: rawParams.offset,
-    };
-
-    // Convert sort string to object
-    if (rawParams.sort) {
-      // If sort is in the format "field:direction", e.g., "firstName:ASC",
-      // else we assume it's just the field with default direction ASC
-      const [key, direction] = rawParams.sort.includes(':') ? rawParams.sort.split(':') : [rawParams.sort, 'ASC'];
-      params.sort = {
-        [key]: direction
-      };
-    }
+    const params = parseListQueryParams<ClientSortField>(rawParams, {
+      defaultSortField: 'lastName',
+      defaultSortDirection: 'ASC',
+      defaultLimit: 10,
+      defaultOffset: 0,
+      minLimit: 1,
+      maxLimit: 100,
+    });
 
     const [data, totalCount] = await this.clientService.getAllClients(params);
     return { data, totalCount };

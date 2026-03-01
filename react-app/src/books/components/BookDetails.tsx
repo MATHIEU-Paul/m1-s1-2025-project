@@ -2,6 +2,7 @@ import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { Avatar, Button, Form, Input, InputNumber, List, message, Modal, Select, Skeleton, Space, Typography } from 'antd'
 import { useEffect, useState } from 'react'
+import { getInitials, hasImagePath } from '../../components/avatarFallback'
 import { API_BASE_URL } from '../../config/api'
 import { PurchaseBookModal } from '../../purchases/components/PurchaseBookModal'
 import { Route as booksRoute } from '../../routes/books'
@@ -113,10 +114,10 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
             <List.Item>
               <List.Item.Meta
                 avatar={
-                  purchase.clientImagePath ? (
-                    <Avatar src={API_BASE_URL + purchase.clientImagePath} />
+                  hasImagePath(purchase.clientImagePath) ? (
+                    <Avatar src={API_BASE_URL + purchase.clientImagePath!.trim()} />
                   ) : (
-                    <Avatar>{purchase.clientFirstName[0]}{purchase.clientLastName[0]}</Avatar>
+                    <Avatar>{getInitials(purchase.clientFirstName, purchase.clientLastName)}</Avatar>
                   )
                 }
                 title={`${purchase.clientFirstName} ${purchase.clientLastName}`}

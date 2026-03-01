@@ -1,16 +1,47 @@
 import axios from 'axios'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
 import type { BookWithPurchaseCountModel, CreateBookModel, UpdateBookModel } from '../BookModel'
 
+export type BookSortField = 'title' | 'authorName' | 'yearPublished'
+
+type LoadBooksQuery = {
+  limit: number
+  offset: number
+  sortField: BookSortField
+  sortOrder: 'ASC' | 'DESC'
+}
+
+const DEFAULT_LOAD_QUERY: LoadBooksQuery = {
+  limit: 10,
+  offset: 0,
+  sortField: 'title',
+  sortOrder: 'ASC',
+}
+
 export const useBookProvider = () => {
   const [books, setBooks] = useState<BookWithPurchaseCountModel[]>([])
+  const [totalCount, setTotalCount] = useState(0)
+  const lastQueryRef = useRef<LoadBooksQuery>(DEFAULT_LOAD_QUERY)
 
-  const loadBooks = () => {
+  const loadBooks = (query?: Partial<LoadBooksQuery>) => {
+    const effectiveQuery: LoadBooksQuery = {
+      ...lastQueryRef.current,
+      ...query,
+    }
+    lastQueryRef.current = effectiveQuery
+
     axios
-      .get(`${API_BASE_URL}/books`)
+      .get(`${API_BASE_URL}/books`, {
+        params: {
+          limit: effectiveQuery.limit,
+          offset: effectiveQuery.offset,
+          sort: `${effectiveQuery.sortField},${effectiveQuery.sortOrder}`,
+        },
+      })
       .then(data => {
         setBooks(data.data.data)
+        setTotalCount(data.data.totalCount ?? 0)
       })
       .catch(err => console.error(err))
   }
@@ -42,5 +73,5 @@ export const useBookProvider = () => {
       .catch(err => console.error(err))
   }
 
-  return { books, loadBooks, createBook, updateBook, deleteBook }
+  return { books, totalCount, loadBooks, createBook, updateBook, deleteBook }
 }

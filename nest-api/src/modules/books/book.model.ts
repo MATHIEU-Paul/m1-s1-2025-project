@@ -1,3 +1,4 @@
+import { ListQueryModel } from '../../utils/list-query';
 import { AuthorId } from '../authors/author.entity';
 import { AuthorModel } from '../authors/author.model';
 import { BookPurchaseDetailsModel } from '../purchases/purchase.model';
@@ -54,11 +55,9 @@ export type CreateGenreModel = {
 
 export type UpdateBookModel = Partial<CreateBookModel>;
 
-export type FilterBooksModel = {
-  limit: number;
-  offset: number;
-  sort?: Partial<Record<keyof BookModel, 'ASC' | 'DESC'>>;
-};
+export type BookSortField = keyof BookModel | 'authorName';
+
+export type FilterBooksModel = ListQueryModel<BookSortField>;
 
 export type GetBooksModel = {
   totalCount: number;

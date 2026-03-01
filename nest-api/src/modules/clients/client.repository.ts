@@ -20,11 +20,16 @@ export class ClientRepository {
   public async getAllClients(
     input?: FilterClientsModel,
   ): Promise<[ClientModel[], number]> {
-    return  this.clientRepository.findAndCount({
-        take: input?.limit,
-        skip: input?.offset,
-        order: input?.sort,
-    })
+    const sortField = input?.sort?.field ?? 'lastName';
+    const sortDirection = input?.sort?.direction ?? 'ASC';
+
+    return this.clientRepository.findAndCount({
+      take: input?.limit,
+      skip: input?.offset,
+      order: {
+        [sortField]: sortDirection,
+      },
+    });
   }
 
   public async getClientById(id: ClientId): Promise<ClientModel | undefined> {

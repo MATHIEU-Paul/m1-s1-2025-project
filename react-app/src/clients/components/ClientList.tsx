@@ -1,29 +1,50 @@
-import { useEffect } from 'react'
-import { useClientProvider } from '../providers/useClientProvider'
+import { QueryableList, type QueryableListQuery } from '../../components/QueryableList'
+import { useClientProvider, type ClientSortField } from '../providers/useClientProvider'
 import { ClientListItem } from './ClientListItem'
 import { CreateClientModal } from './CreateClientModal'
 
 export function ClientList() {
-  const { clients, loadClients, deleteClient, updateClient, createClient } =
+  const { clients, totalCount, loadClients, deleteClient, updateClient, createClient } =
     useClientProvider()
 
-  useEffect(() => {
-    loadClients()
-  }, [])
+  const onQueryChange = (query: QueryableListQuery<ClientSortField>) => {
+    loadClients({
+      limit: query.limit,
+      offset: query.offset,
+      sortField: query.sortField,
+      sortOrder: query.sortOrder,
+    })
+  }
 
   return (
     <>
       <CreateClientModal onCreate={createClient} />
-      <div style={{ padding: '0 .5rem' }}>
-        {clients.map(client => (
+      <QueryableList<ClientSortField, (typeof clients)[number]>
+        sortLabel="Sort clients by"
+        initialSortField="lastName"
+        initialSortOrder="ASC"
+        initialPage={1}
+        initialPageSize={10}
+        sortOptions={[
+          { value: 'lastName', label: 'Last name' },
+          { value: 'firstName', label: 'First name' },
+          { value: 'email', label: 'Email' },
+        ]}
+        onQueryChange={onQueryChange}
+        items={clients}
+        getItemKey={client => client.id}
+        renderItem={client => (
           <ClientListItem
-            key={client.id}
             client={client}
             onDelete={deleteClient}
             onUpdate={updateClient}
           />
-        ))}
-      </div>
+        )}
+        listStyle={{ padding: '0 .5rem' }}
+        totalCount={totalCount}
+        pageSizeOptions={[5, 10, 20, 50]}
+        entityLabel="clients"
+      />
     </>
   )
 }

@@ -1,7 +1,8 @@
 import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Button, Card, Col, Image, Input, List, Row, Skeleton, Space, Typography } from 'antd'
+import { Avatar, Button, Card, Col, Image, Input, List, Row, Skeleton, Space, Typography } from 'antd'
 import { useEffect, useState } from 'react'
+import { getInitials, hasImagePath } from '../../components/avatarFallback'
 import { API_BASE_URL } from '../../config/api'
 import { useClientDetailsProvider } from '../providers/useClientDetailsProvider'
 
@@ -59,6 +60,13 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
       
       <Card title="Client Information" style={{ marginTop: '1rem' }}>
         <Space direction="vertical" style={{ width: '100%' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}>
+            {hasImagePath(client?.imagePath) ? (
+              <Avatar size={84} src={API_BASE_URL + client.imagePath.trim()} />
+            ) : (
+              <Avatar size={84} style={{ backgroundColor: '#395E66' }}>{getInitials(client?.firstName, client?.lastName)}</Avatar>
+            )}
+          </div>
           <div>
             <label style={{ fontWeight: 'bold' }}>First Name:</label>
             <Input

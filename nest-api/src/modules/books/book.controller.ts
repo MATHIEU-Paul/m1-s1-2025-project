@@ -8,13 +8,10 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { parseListQueryParams } from '../../utils/list-query';
 import { BookMetadataService } from './book-metadata.service';
-import {
-  CreateBookDto,
-  GetBooksDto,
-  UpdateBookDto
-} from './book.dto';
-import { GetBooksModel } from './book.model';
+import { CreateBookDto, GetBooksDto, UpdateBookDto } from './book.dto';
+import { BookSortField, GetBooksModel } from './book.model';
 import { BookService } from './book.service';
 import { BookId } from './entities/book.entity';
 
@@ -27,16 +24,16 @@ export class BookController {
 
   @Get()
   async getBooks(@Query() input: GetBooksDto): Promise<GetBooksModel> {
-    const [property, direction] = input.sort
-      ? input.sort.split(',')
-      : ['title', 'ASC'];
-
-    const [books, totalCount] = await this.bookService.getAllBooks({
-      ...input,
-      sort: {
-        [property]: direction,
-      },
+    const params = parseListQueryParams<BookSortField>(input, {
+      defaultSortField: 'title',
+      defaultSortDirection: 'ASC',
+      defaultLimit: 10,
+      defaultOffset: 0,
+      minLimit: 1,
+      maxLimit: 100,
     });
+
+    const [books, totalCount] = await this.bookService.getAllBooks(params);
 
     return {
       data: books,
@@ -48,7 +45,7 @@ export class BookController {
   public async getBookTypes() {
     return this.bookMetadataService.getBookTypes();
   }
-  
+
   @Get('genres')
   public async getGenres() {
     return this.bookMetadataService.getGenres();

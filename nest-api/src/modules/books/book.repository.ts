@@ -34,11 +34,28 @@ export class BookRepository {
   public async getAllBooks(
     input?: FilterBooksModel,
   ): Promise<[BookModel[], number]> {
+    const sortField = input?.sort?.field ?? 'title';
+    const sortDirection = input?.sort?.direction ?? 'ASC';
+
+    const order =
+      sortField === 'authorName'
+        ? {
+            author: {
+              lastName: sortDirection,
+              firstName: sortDirection,
+            },
+            title: 'ASC' as const,
+          }
+        : {
+            [sortField]: sortDirection,
+            title: 'ASC' as const,
+          };
+
     const [books, totalCount] = await this.bookRepository.findAndCount({
       take: input?.limit,
       skip: input?.offset,
       relations: { author: true, bookType: true, genre: true },
-      order: input?.sort,
+      order,
     });
 
     return [books, totalCount];

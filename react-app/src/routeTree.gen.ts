@@ -16,6 +16,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ClientsIndexRouteImport } from './routes/clients/index'
 import { Route as BooksIndexRouteImport } from './routes/books/index'
+import { Route as AuthorsIndexRouteImport } from './routes/authors/index'
 import { Route as ClientsClientIdRouteImport } from './routes/clients.$clientId'
 import { Route as BooksBookIdRouteImport } from './routes/books.$bookId'
 import { Route as AuthorsAuthorIdRouteImport } from './routes/authors.$authorId'
@@ -55,6 +56,11 @@ const BooksIndexRoute = BooksIndexRouteImport.update({
   path: '/',
   getParentRoute: () => BooksRoute,
 } as any)
+const AuthorsIndexRoute = AuthorsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthorsRoute,
+} as any)
 const ClientsClientIdRoute = ClientsClientIdRouteImport.update({
   id: '/$clientId',
   path: '/$clientId',
@@ -80,16 +86,17 @@ export interface FileRoutesByFullPath {
   '/authors/$authorId': typeof AuthorsAuthorIdRoute
   '/books/$bookId': typeof BooksBookIdRoute
   '/clients/$clientId': typeof ClientsClientIdRoute
+  '/authors/': typeof AuthorsIndexRoute
   '/books/': typeof BooksIndexRoute
   '/clients/': typeof ClientsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/authors': typeof AuthorsRouteWithChildren
   '/authors/$authorId': typeof AuthorsAuthorIdRoute
   '/books/$bookId': typeof BooksBookIdRoute
   '/clients/$clientId': typeof ClientsClientIdRoute
+  '/authors': typeof AuthorsIndexRoute
   '/books': typeof BooksIndexRoute
   '/clients': typeof ClientsIndexRoute
 }
@@ -103,6 +110,7 @@ export interface FileRoutesById {
   '/authors/$authorId': typeof AuthorsAuthorIdRoute
   '/books/$bookId': typeof BooksBookIdRoute
   '/clients/$clientId': typeof ClientsClientIdRoute
+  '/authors/': typeof AuthorsIndexRoute
   '/books/': typeof BooksIndexRoute
   '/clients/': typeof ClientsIndexRoute
 }
@@ -117,16 +125,17 @@ export interface FileRouteTypes {
     | '/authors/$authorId'
     | '/books/$bookId'
     | '/clients/$clientId'
+    | '/authors/'
     | '/books/'
     | '/clients/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/authors'
     | '/authors/$authorId'
     | '/books/$bookId'
     | '/clients/$clientId'
+    | '/authors'
     | '/books'
     | '/clients'
   id:
@@ -139,6 +148,7 @@ export interface FileRouteTypes {
     | '/authors/$authorId'
     | '/books/$bookId'
     | '/clients/$clientId'
+    | '/authors/'
     | '/books/'
     | '/clients/'
   fileRoutesById: FileRoutesById
@@ -202,6 +212,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BooksIndexRouteImport
       parentRoute: typeof BooksRoute
     }
+    '/authors/': {
+      id: '/authors/'
+      path: '/'
+      fullPath: '/authors/'
+      preLoaderRoute: typeof AuthorsIndexRouteImport
+      parentRoute: typeof AuthorsRoute
+    }
     '/clients/$clientId': {
       id: '/clients/$clientId'
       path: '/$clientId'
@@ -228,10 +245,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthorsRouteChildren {
   AuthorsAuthorIdRoute: typeof AuthorsAuthorIdRoute
+  AuthorsIndexRoute: typeof AuthorsIndexRoute
 }
 
 const AuthorsRouteChildren: AuthorsRouteChildren = {
   AuthorsAuthorIdRoute: AuthorsAuthorIdRoute,
+  AuthorsIndexRoute: AuthorsIndexRoute,
 }
 
 const AuthorsRouteWithChildren =

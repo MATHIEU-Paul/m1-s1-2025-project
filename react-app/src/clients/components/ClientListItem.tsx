@@ -8,6 +8,7 @@ import {
 import { Link } from '@tanstack/react-router'
 import { Avatar, Badge, Button, Col, Modal, Row } from 'antd'
 import { useState } from 'react'
+import { getInitials, hasImagePath } from '../../components/avatarFallback'
 import { API_BASE_URL } from '../../config/api'
 import type { ClientWithPurchaseCountModel, UpdateClientModel } from '../ClientModel'
 
@@ -74,10 +75,10 @@ export function ClientListItem({ client, onDelete, onUpdate }: ClientListItemPro
               gap: '.75rem',
             }}
           >
-            {client.imagePath ? (
-              <Avatar src={API_BASE_URL + client.imagePath} />
+            {hasImagePath(client.imagePath) ? (
+              <Avatar src={API_BASE_URL + client.imagePath.trim()} />
             ) : (
-              <Avatar>{client.firstName[0]}{client.lastName[0]}</Avatar>
+              <Avatar style={{ backgroundColor: '#395E66' }}>{getInitials(client.firstName, client.lastName)}</Avatar>
             )}
             <Link
               to={`/clients/$clientId`}

@@ -1,3 +1,4 @@
+import { ListQueryModel } from '../../utils/list-query';
 import { ClientPurchaseDetailsModel } from '../purchases/purchase.model';
 import { ClientId } from './client.entity';
 
@@ -26,11 +27,9 @@ export type CreateClientModel = {
 
 export type UpdateClientModel = Partial<CreateClientModel>;
 
-export type FilterClientsModel = {
-  limit: number;
-  offset: number;
-  sort?: Partial<Record<keyof ClientModel, 'ASC' | 'DESC'>>;
-};
+export type ClientSortField = keyof ClientModel;
+
+export type FilterClientsModel = ListQueryModel<ClientSortField>;
 
 export type GetClientsModel = {
   totalCount: number;

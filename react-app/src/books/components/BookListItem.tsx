@@ -8,6 +8,7 @@ import {
 import { Link } from '@tanstack/react-router'
 import { Avatar, Button, Col, Modal, Row } from 'antd'
 import { useState } from 'react'
+import { hasImagePath } from '../../components/avatarFallback'
 import { API_BASE_URL } from '../../config/api'
 import type { BookWithPurchaseCountModel, UpdateBookModel } from '../BookModel'
 
@@ -49,11 +50,10 @@ export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
     <Row
       style={{
         width: '100%',
-        height: '50px',
         borderRadius: '10px',
         backgroundColor: '#EEEEEE',
         margin: '1rem 0',
-        padding: '.25rem',
+        padding: '.5rem',
         display: 'flex',
         justifyContent: 'space-between',
       }}
@@ -69,16 +69,18 @@ export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
               gap: '.75rem',
             }}
           >
-            <Avatar
-              shape="square"
-              src={book.coverPath ? API_BASE_URL + book.coverPath : undefined}
-              style={{
-                width: '34px',
-                height: '48px',
-                borderRadius: '6px',
-                flexShrink: 0,
-              }}
-            />
+            {hasImagePath(book.coverPath) && (
+              <Avatar
+                shape="square"
+                src={API_BASE_URL + book.coverPath!.trim()}
+                style={{
+                  width: '34px',
+                  height: '48px',
+                  borderRadius: '6px',
+                  flexShrink: 0,
+                }}
+              />
+            )}
             <Link
               to={`/books/$bookId`}
               params={{ bookId: book.id }}
@@ -93,7 +95,7 @@ export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
           </div>
         )}
       </Col>
-      <Col span={9} style={{ margin: 'auto 0' }}>
+      <Col span={9} style={{ margin: 'auto 0', color: '#395E66' }}>
         by <span style={{ fontWeight: 'bold' }}>{book.author.firstName}</span>{' '}
         <span style={{ fontWeight: 'bold' }}>{book.author.lastName}</span>
       </Col>

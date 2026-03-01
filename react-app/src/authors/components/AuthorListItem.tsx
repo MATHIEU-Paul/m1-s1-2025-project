@@ -1,6 +1,7 @@
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Button, Col, Modal, Row, Avatar } from 'antd'
+import { Avatar, Button, Col, Modal, Row } from 'antd'
+import { getInitials, hasImagePath } from '../../components/avatarFallback'
 import { API_BASE_URL } from '../../config/api'
 import type { AuthorWithBookCountModel } from '../AuthorModel'
 
@@ -39,10 +40,10 @@ export function AuthorListItem({ author, onDelete }: AuthorListItemProps) {
       }}
     >
       <Col span={18} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        {author.imagePath ? (
-            <Avatar src={API_BASE_URL + author.imagePath} />
+        {hasImagePath(author.imagePath) ? (
+            <Avatar src={API_BASE_URL + author.imagePath.trim()} />
           ) : (
-            <Avatar>{author.firstName[0]}{author.lastName[0]}</Avatar>
+            <Avatar style={{ backgroundColor: '#395E66' }}>{getInitials(author.firstName, author.lastName)}</Avatar>
         )}
         <Link to={`/authors/$authorId`} params={{ authorId: author.id }}>
           <span style={{ fontWeight: 'bold' }}>{author.firstName} {author.lastName}</span> -{' '}

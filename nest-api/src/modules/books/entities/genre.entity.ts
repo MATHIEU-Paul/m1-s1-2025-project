@@ -1,9 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  PrimaryGeneratedColumn
-} from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 export type GenreId = string & { __brand: 'Genre' };
 
@@ -13,5 +8,5 @@ export class GenreEntity extends BaseEntity {
   id: GenreId;
 
   @Column()
-  name: string; 
+  name: string;
 }

@@ -1,9 +1,10 @@
 import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Button, Form, Input, List, message, Modal, Skeleton, Space, Typography, Avatar } from 'antd'
+import { Avatar, Button, Form, Input, List, message, Modal, Skeleton, Space, Typography } from 'antd'
 import { useEffect, useState } from 'react'
+import { getInitials, hasImagePath } from '../../components/avatarFallback'
 import { API_BASE_URL } from '../../config/api'
-import { Route as authorsRoute } from '../../routes/authors' 
+import { Route as authorsRoute } from '../../routes/authors'
 import { useAuthorDetailsProvider } from '../providers/useAuthorDetailsProvider'
 
 interface AuthorDetailsProps {
@@ -57,10 +58,10 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
       </div>
 
       <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-        {author?.imagePath ? (
-          <Avatar size={100} src={API_BASE_URL + author.imagePath} />
+        {hasImagePath(author?.imagePath) ? (
+          <Avatar size={100} src={API_BASE_URL + author.imagePath.trim()} />
         ) : (
-          <Avatar size={100}>{author?.firstName?.[0]}{author?.lastName?.[0]}</Avatar>
+          <Avatar size={100} style={{ backgroundColor: '#395E66' }}>{getInitials(author?.firstName, author?.lastName)}</Avatar>
         )}
         <div>
           <Typography.Title level={2} style={{ margin: 0 }}>
