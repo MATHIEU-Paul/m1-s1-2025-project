@@ -1,7 +1,11 @@
 import axios from 'axios'
 import { useRef, useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
-import type { BookWithPurchaseCountModel, CreateBookModel, UpdateBookModel } from '../BookModel'
+import type {
+  BookWithPurchaseCountModel,
+  CreateBookModel,
+  UpdateBookModel,
+} from '../BookModel'
 
 export type BookSortField = 'title' | 'authorName' | 'yearPublished'
 

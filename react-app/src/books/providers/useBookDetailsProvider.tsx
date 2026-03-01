@@ -15,11 +15,13 @@ export const useBookDetailsProvider = (id: string) => {
       .finally(() => setIsLoading(false))
   }
 
-  
   const updateBook = async (updatedData: UpdateBookModel) => {
-  const response = await axios.patch(`${API_BASE_URL}/books/${id}`, updatedData);
-  setBook(response.data); // Refresh local state with new data
-};
+    const response = await axios.patch(
+      `${API_BASE_URL}/books/${id}`,
+      updatedData,
+    )
+    setBook(response.data) // Refresh local state with new data
+  }
 
   return { isLoading, book, loadBook, updateBook }
 }

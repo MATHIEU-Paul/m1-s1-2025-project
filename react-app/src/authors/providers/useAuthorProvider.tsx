@@ -1,7 +1,11 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
-import type { AuthorWithBookCountModel, CreateAuthorModel, UpdateAuthorModel } from '../AuthorModel'
+import type {
+  AuthorWithBookCountModel,
+  CreateAuthorModel,
+  UpdateAuthorModel,
+} from '../AuthorModel'
 
 export const useAuthorProvider = () => {
   const [authors, setAuthors] = useState<AuthorWithBookCountModel[]>([])
@@ -10,7 +14,7 @@ export const useAuthorProvider = () => {
     axios
       .get(`${API_BASE_URL}/authors`)
       .then(response => {
-        setAuthors(response.data) 
+        setAuthors(response.data)
       })
       .catch(err => console.error(err))
   }

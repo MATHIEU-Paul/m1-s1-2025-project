@@ -1,6 +1,18 @@
 import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Avatar, Button, Card, Col, Image, Input, List, Row, Skeleton, Space, Typography } from 'antd'
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Image,
+  Input,
+  List,
+  Row,
+  Skeleton,
+  Space,
+  Typography,
+} from 'antd'
 import { useEffect, useState } from 'react'
 import { getInitials, hasImagePath } from '../../components/avatarFallback'
 import { API_BASE_URL } from '../../config/api'
@@ -11,7 +23,8 @@ interface ClientDetailsProps {
 }
 
 export const ClientDetails = ({ id }: ClientDetailsProps) => {
-  const { isLoading, client, purchases, loadClient, updateClient } = useClientDetailsProvider(id)
+  const { isLoading, client, purchases, loadClient, updateClient } =
+    useClientDetailsProvider(id)
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
@@ -33,8 +46,8 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
     if (client) {
       setHasChanges(
         firstName !== client.firstName ||
-        lastName !== client.lastName ||
-        email !== (client.email || '')
+          lastName !== client.lastName ||
+          email !== (client.email || ''),
       )
     }
   }, [firstName, lastName, email, client])
@@ -53,18 +66,29 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
   }
 
   return (
-    <Space direction="vertical" style={{ textAlign: 'left', width: '95%', padding: '1rem' }}>
+    <Space
+      direction="vertical"
+      style={{ textAlign: 'left', width: '95%', padding: '1rem' }}
+    >
       <Link to="/clients">
         <ArrowLeftOutlined /> Back to Clients
       </Link>
-      
+
       <Card title="Client Information" style={{ marginTop: '1rem' }}>
         <Space direction="vertical" style={{ width: '100%' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginBottom: '0.5rem',
+            }}
+          >
             {hasImagePath(client?.imagePath) ? (
               <Avatar size={84} src={API_BASE_URL + client.imagePath.trim()} />
             ) : (
-              <Avatar size={84} style={{ backgroundColor: '#395E66' }}>{getInitials(client?.firstName, client?.lastName)}</Avatar>
+              <Avatar size={84} style={{ backgroundColor: '#395E66' }}>
+                {getInitials(client?.firstName, client?.lastName)}
+              </Avatar>
             )}
           </div>
           <div>
@@ -106,7 +130,7 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
         </Space>
       </Card>
 
-      <Card 
+      <Card
         title={`Purchased Books (${purchases.length})`}
         style={{ marginTop: '1rem' }}
       >
@@ -117,8 +141,13 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
         ) : (
           <List
             dataSource={purchases}
-            renderItem={(purchase) => (
-              <List.Item style={{ marginBottom: '1rem', borderBottom: '1px solid #f0f0f0' }}>
+            renderItem={purchase => (
+              <List.Item
+                style={{
+                  marginBottom: '1rem',
+                  borderBottom: '1px solid #f0f0f0',
+                }}
+              >
                 <Row gutter={16} style={{ width: '100%' }}>
                   {purchase.bookCoverPath && (
                     <Col span={4}>
@@ -140,7 +169,9 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
                       </div>
                       <div>
                         <Typography.Text strong>Author:</Typography.Text>
-                        <Typography.Text style={{ marginLeft: '0.5rem' }}>{purchase.bookAuthor}</Typography.Text>
+                        <Typography.Text style={{ marginLeft: '0.5rem' }}>
+                          {purchase.bookAuthor}
+                        </Typography.Text>
                       </div>
                       <div>
                         <Typography.Text strong>Purchase Date:</Typography.Text>
@@ -149,7 +180,10 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
                         </Typography.Text>
                       </div>
                       <div>
-                        <Link to="/books/$bookId" params={{ bookId: purchase.bookId }}>
+                        <Link
+                          to="/books/$bookId"
+                          params={{ bookId: purchase.bookId }}
+                        >
                           See Book Details
                         </Link>
                       </div>
@@ -164,4 +198,3 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
     </Space>
   )
 }
-

@@ -16,8 +16,11 @@ export const useAuthorDetailsProvider = (id: string) => {
   }
 
   const updateAuthor = async (updatedData: UpdateAuthorModel) => {
-    const response = await axios.patch(`${API_BASE_URL}/authors/${id}`, updatedData)
-    setAuthor(response.data) 
+    const response = await axios.patch(
+      `${API_BASE_URL}/authors/${id}`,
+      updatedData,
+    )
+    setAuthor(response.data)
   }
 
   return { isLoading, author, loadAuthor, updateAuthor }

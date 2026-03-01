@@ -1,11 +1,23 @@
-import { QueryableList, type QueryableListQuery } from '../../components/QueryableList'
-import { useClientProvider, type ClientSortField } from '../providers/useClientProvider'
+import {
+  QueryableList,
+  type QueryableListQuery,
+} from '../../components/QueryableList'
+import {
+  useClientProvider,
+  type ClientSortField,
+} from '../providers/useClientProvider'
 import { ClientListItem } from './ClientListItem'
 import { CreateClientModal } from './CreateClientModal'
 
 export function ClientList() {
-  const { clients, totalCount, loadClients, deleteClient, updateClient, createClient } =
-    useClientProvider()
+  const {
+    clients,
+    totalCount,
+    loadClients,
+    deleteClient,
+    updateClient,
+    createClient,
+  } = useClientProvider()
 
   const onQueryChange = (query: QueryableListQuery<ClientSortField>) => {
     loadClients({

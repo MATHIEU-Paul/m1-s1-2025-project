@@ -18,7 +18,8 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
   const [numberPages, setNumberPages] = useState<number | undefined>(undefined)
   const [coverImage, setCoverImage] = useState<string | undefined>(undefined)
   const { authors, loadAuthors } = useBookAuthorsProviders()
-  const { genres, bookTypes, loadGenres, loadBookTypes } = useBookMetadataProvider()
+  const { genres, bookTypes, loadGenres, loadBookTypes } =
+    useBookMetadataProvider()
   const [authorId, setAuthorId] = useState<string | undefined>(undefined)
   const [bookTypeId, setBookTypeId] = useState<string | undefined>(undefined)
   const [genreId, setGenreId] = useState<string | undefined>(undefined)

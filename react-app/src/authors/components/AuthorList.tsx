@@ -4,7 +4,8 @@ import { AuthorListItem } from './AuthorListItem'
 import { CreateAuthorModal } from './CreateAuthorModal'
 
 export function AuthorList() {
-  const { authors, loadAuthors, deleteAuthor, createAuthor } = useAuthorProvider()
+  const { authors, loadAuthors, deleteAuthor, createAuthor } =
+    useAuthorProvider()
 
   useEffect(() => {
     loadAuthors()

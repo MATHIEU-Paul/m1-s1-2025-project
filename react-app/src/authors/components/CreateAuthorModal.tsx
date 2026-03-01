@@ -24,7 +24,11 @@ export function CreateAuthorModal({ onCreate }: CreateAuthorModalProps) {
 
   return (
     <>
-      <Button icon={<PlusOutlined />} type="primary" onClick={() => setIsOpen(true)}>
+      <Button
+        icon={<PlusOutlined />}
+        type="primary"
+        onClick={() => setIsOpen(true)}
+      >
         Create Author
       </Button>
       <Modal

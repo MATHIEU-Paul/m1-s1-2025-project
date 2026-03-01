@@ -31,5 +31,3 @@ export type CreateClientModel = {
 }
 
 export type UpdateClientModel = Partial<CreateClientModel>
-
-

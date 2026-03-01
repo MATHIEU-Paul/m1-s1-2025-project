@@ -1,6 +1,19 @@
 import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Avatar, Button, Form, Input, InputNumber, List, message, Modal, Select, Skeleton, Space, Typography } from 'antd'
+import {
+  Avatar,
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  List,
+  message,
+  Modal,
+  Select,
+  Skeleton,
+  Space,
+  Typography,
+} from 'antd'
 import { useEffect, useState } from 'react'
 import { getInitials, hasImagePath } from '../../components/avatarFallback'
 import { API_BASE_URL } from '../../config/api'
@@ -8,7 +21,6 @@ import { PurchaseBookModal } from '../../purchases/components/PurchaseBookModal'
 import { Route as booksRoute } from '../../routes/books'
 import { useBookAuthorsProviders } from '../providers/useBookAuthorsProviders'
 import { useBookDetailsProvider } from '../providers/useBookDetailsProvider'
-
 
 interface BookDetailsProps {
   id: string
@@ -41,7 +53,6 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
     }
   }
 
-
   const handleOk = async () => {
     try {
       const values = await form.validateFields()
@@ -57,7 +68,6 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
     }
   }
 
-
   if (isLoading) return <Skeleton active />
 
   return (
@@ -66,7 +76,13 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
         <ArrowLeftOutlined /> Back to list
       </Link>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <Typography.Title level={1}>Book Details</Typography.Title>
 
         <Space>
@@ -81,19 +97,17 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
         </Space>
       </div>
 
-      <Typography.Title level={2}>
-        {book?.title}
-      </Typography.Title>
-      
+      <Typography.Title level={2}>{book?.title}</Typography.Title>
+
       <Typography.Title level={3} type="secondary">
         By {book?.author?.firstName} {book?.author?.lastName}
       </Typography.Title>
-      
+
       <Typography.Text strong>Published Year: </Typography.Text>
       <Typography.Text>{book?.yearPublished}</Typography.Text>
 
       {book?.coverPath && (
-        <img 
+        <img
           src={API_BASE_URL + book.coverPath}
           alt={`${book.title} cover`}
           style={{ marginTop: '1rem', maxWidth: '200px', borderRadius: '5px' }}
@@ -115,9 +129,16 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
               <List.Item.Meta
                 avatar={
                   hasImagePath(purchase.clientImagePath) ? (
-                    <Avatar src={API_BASE_URL + purchase.clientImagePath!.trim()} />
+                    <Avatar
+                      src={API_BASE_URL + purchase.clientImagePath!.trim()}
+                    />
                   ) : (
-                    <Avatar>{getInitials(purchase.clientFirstName, purchase.clientLastName)}</Avatar>
+                    <Avatar>
+                      {getInitials(
+                        purchase.clientFirstName,
+                        purchase.clientLastName,
+                      )}
+                    </Avatar>
                   )
                 }
                 title={`${purchase.clientFirstName} ${purchase.clientLastName}`}
@@ -127,11 +148,11 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
           )}
         />
       )}
-      
-      <Modal 
-        title="Edit Book Information" 
-        open={isModalOpen} 
-        onOk={handleOk} 
+
+      <Modal
+        title="Edit Book Information"
+        open={isModalOpen}
+        onOk={handleOk}
         onCancel={() => setIsModalOpen(false)}
         okText="Save Changes"
         cancelText="Cancel"
@@ -146,12 +167,16 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
             <Input placeholder="Enter book title" />
           </Form.Item>
 
-          <Form.Item name="authorId" label="Author" rules={[{ required: true }]}>
-            <Select 
+          <Form.Item
+            name="authorId"
+            label="Author"
+            rules={[{ required: true }]}
+          >
+            <Select
               placeholder="Select an author"
               options={authors.map(a => ({
                 label: `${a.firstName} ${a.lastName}`,
-                value: a.id
+                value: a.id,
               }))}
             />
           </Form.Item>
@@ -167,9 +192,14 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
           <Form.Item
             name="numberpages"
             label="Number of Pages"
-            rules={[{ required: false, message: 'Please enter the number of pages' }]}
+            rules={[
+              { required: false, message: 'Please enter the number of pages' },
+            ]}
           >
-            <InputNumber style={{ width: '100%' }} placeholder="Enter number of pages" />
+            <InputNumber
+              style={{ width: '100%' }}
+              placeholder="Enter number of pages"
+            />
           </Form.Item>
 
           {/* <Form.Item
@@ -186,7 +216,6 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
           </Form.Item> */}
         </Form>
       </Modal>
-
     </Space>
   )
 }

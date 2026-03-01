@@ -1,5 +1,11 @@
 import { Pagination, Radio, Select, Space, Typography } from 'antd'
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react'
 
 export type ListSortOrder = 'ASC' | 'DESC'
 
@@ -132,7 +138,9 @@ export function QueryableList<TSortField extends string, TItem>({
             optionType="button"
             buttonStyle="solid"
             value={sortOrder}
-            onChange={event => onSortOrderChange(event.target.value as ListSortOrder)}
+            onChange={event =>
+              onSortOrderChange(event.target.value as ListSortOrder)
+            }
             options={[
               { label: 'Ascending', value: 'ASC' },
               { label: 'Descending', value: 'DESC' },
@@ -147,7 +155,13 @@ export function QueryableList<TSortField extends string, TItem>({
         ))}
       </div>
 
-      <div style={{ padding: '0 .5rem 1rem .5rem', display: 'flex', justifyContent: 'flex-end' }}>
+      <div
+        style={{
+          padding: '0 .5rem 1rem .5rem',
+          display: 'flex',
+          justifyContent: 'flex-end',
+        }}
+      >
         <Pagination
           current={pagination.current}
           pageSize={pagination.pageSize}

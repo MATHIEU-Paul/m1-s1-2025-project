@@ -90,7 +90,8 @@ export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
               }}
             >
               <span style={{ fontWeight: 'bold' }}>{book.title}</span> -{' '}
-              {book.yearPublished} ({book.purchaseCount} purchase{book.purchaseCount > 1 ? 's' : ''})
+              {book.yearPublished} ({book.purchaseCount} purchase
+              {book.purchaseCount > 1 ? 's' : ''})
             </Link>
           </div>
         )}

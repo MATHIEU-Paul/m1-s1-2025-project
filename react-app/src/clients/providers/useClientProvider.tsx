@@ -1,7 +1,11 @@
 import axios from 'axios'
 import { useRef, useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
-import type { ClientWithPurchaseCountModel, CreateClientModel, UpdateClientModel } from '../ClientModel'
+import type {
+  ClientWithPurchaseCountModel,
+  CreateClientModel,
+  UpdateClientModel,
+} from '../ClientModel'
 
 export type ClientSortField = 'firstName' | 'lastName' | 'email'
 
@@ -73,5 +77,12 @@ export const useClientProvider = () => {
       .catch(err => console.error(err))
   }
 
-  return { clients, totalCount, loadClients, createClient, updateClient, deleteClient }
+  return {
+    clients,
+    totalCount,
+    loadClients,
+    createClient,
+    updateClient,
+    deleteClient,
+  }
 }

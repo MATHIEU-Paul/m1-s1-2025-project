@@ -36,18 +36,25 @@ export function AuthorListItem({ author, onDelete }: AuthorListItemProps) {
         padding: '.25rem 1rem',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
       }}
     >
-      <Col span={18} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <Col
+        span={18}
+        style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}
+      >
         {hasImagePath(author.imagePath) ? (
-            <Avatar src={API_BASE_URL + author.imagePath.trim()} />
-          ) : (
-            <Avatar style={{ backgroundColor: '#395E66' }}>{getInitials(author.firstName, author.lastName)}</Avatar>
+          <Avatar src={API_BASE_URL + author.imagePath.trim()} />
+        ) : (
+          <Avatar style={{ backgroundColor: '#395E66' }}>
+            {getInitials(author.firstName, author.lastName)}
+          </Avatar>
         )}
         <Link to={`/authors/$authorId`} params={{ authorId: author.id }}>
-          <span style={{ fontWeight: 'bold' }}>{author.firstName} {author.lastName}</span> -{' '}
-          {author.bookCount} book{author.bookCount > 1 ? 's' : ''}
+          <span style={{ fontWeight: 'bold' }}>
+            {author.firstName} {author.lastName}
+          </span>{' '}
+          - {author.bookCount} book{author.bookCount > 1 ? 's' : ''}
         </Link>
       </Col>
       <Col span={6} style={{ textAlign: 'right' }}>

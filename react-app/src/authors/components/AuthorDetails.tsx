@@ -1,6 +1,17 @@
 import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Avatar, Button, Form, Input, List, message, Modal, Skeleton, Space, Typography } from 'antd'
+import {
+  Avatar,
+  Button,
+  Form,
+  Input,
+  List,
+  message,
+  Modal,
+  Skeleton,
+  Space,
+  Typography,
+} from 'antd'
 import { useEffect, useState } from 'react'
 import { getInitials, hasImagePath } from '../../components/avatarFallback'
 import { API_BASE_URL } from '../../config/api'
@@ -12,7 +23,8 @@ interface AuthorDetailsProps {
 }
 
 export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
-  const { isLoading, author, loadAuthor, updateAuthor } = useAuthorDetailsProvider(id)
+  const { isLoading, author, loadAuthor, updateAuthor } =
+    useAuthorDetailsProvider(id)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [form] = Form.useForm()
 
@@ -50,7 +62,13 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
         <ArrowLeftOutlined /> Back to list
       </Link>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <Typography.Title level={1}>Author Details</Typography.Title>
         <Button type="primary" icon={<EditOutlined />} onClick={showEditModal}>
           Edit Info
@@ -61,7 +79,9 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
         {hasImagePath(author?.imagePath) ? (
           <Avatar size={100} src={API_BASE_URL + author.imagePath.trim()} />
         ) : (
-          <Avatar size={100} style={{ backgroundColor: '#395E66' }}>{getInitials(author?.firstName, author?.lastName)}</Avatar>
+          <Avatar size={100} style={{ backgroundColor: '#395E66' }}>
+            {getInitials(author?.firstName, author?.lastName)}
+          </Avatar>
         )}
         <div>
           <Typography.Title level={2} style={{ margin: 0 }}>
@@ -88,24 +108,27 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
               <List.Item.Meta
                 avatar={
                   book.coverPath ? (
-                    <Avatar shape="square" src={API_BASE_URL + book.coverPath} />
+                    <Avatar
+                      shape="square"
+                      src={API_BASE_URL + book.coverPath}
+                    />
                   ) : undefined
                 }
                 title={
-                    <Link to="/books/$bookId" params={{ bookId: book.id }}>
+                  <Link to="/books/$bookId" params={{ bookId: book.id }}>
                     {book.title}
-                    </Link>
+                  </Link>
                 }
               />
             </List.Item>
           )}
         />
       )}
-      
-      <Modal 
-        title="Edit Author Information" 
-        open={isModalOpen} 
-        onOk={handleOk} 
+
+      <Modal
+        title="Edit Author Information"
+        open={isModalOpen}
+        onOk={handleOk}
         onCancel={() => setIsModalOpen(false)}
         okText="Save Changes"
         cancelText="Cancel"

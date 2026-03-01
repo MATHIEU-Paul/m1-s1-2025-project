@@ -1,7 +1,6 @@
 import { ConfigProvider, theme } from 'antd'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
-
 type ThemeContextType = {
   isDarkMode: boolean
   toggleTheme: () => void
@@ -29,7 +28,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         theme={{
           algorithm: isDarkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
           token: {
-            colorPrimary: '#395E66', 
+            colorPrimary: '#395E66',
           },
         }}
       >

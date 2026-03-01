@@ -17,7 +17,7 @@ export type AuthorWithBookCountModel = AuthorModel & {
 
 export type AuthorDetailsModel = AuthorModel & {
   books: AuthorBookModel[]
-  purchasesAverage: number;
+  purchasesAverage: number
 }
 
 export type CreateAuthorModel = {

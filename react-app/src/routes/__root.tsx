@@ -1,6 +1,6 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { Layout } from '../Layout'
-import { ThemeProvider } from '../providers/ThemeProvider' 
+import { ThemeProvider } from '../providers/ThemeProvider'
 const RootLayout = () => {
   return (
     <ThemeProvider>

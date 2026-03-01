@@ -10,7 +10,10 @@ import { Avatar, Badge, Button, Col, Modal, Row } from 'antd'
 import { useState } from 'react'
 import { getInitials, hasImagePath } from '../../components/avatarFallback'
 import { API_BASE_URL } from '../../config/api'
-import type { ClientWithPurchaseCountModel, UpdateClientModel } from '../ClientModel'
+import type {
+  ClientWithPurchaseCountModel,
+  UpdateClientModel,
+} from '../ClientModel'
 
 interface ClientListItemProps {
   client: ClientWithPurchaseCountModel
@@ -18,7 +21,11 @@ interface ClientListItemProps {
   onUpdate: (id: string, input: UpdateClientModel) => void
 }
 
-export function ClientListItem({ client, onDelete, onUpdate }: ClientListItemProps) {
+export function ClientListItem({
+  client,
+  onDelete,
+  onUpdate,
+}: ClientListItemProps) {
   const [firstName, setFirstName] = useState(client.firstName)
   const [lastName, setLastName] = useState(client.lastName)
   const [isEditing, setIsEditing] = useState(false)
@@ -64,8 +71,14 @@ export function ClientListItem({ client, onDelete, onUpdate }: ClientListItemPro
       <Col span={12} style={{ margin: 'auto 0' }}>
         {isEditing ? (
           <div style={{ display: 'flex', gap: '.5rem' }}>
-            <input value={firstName} onChange={e => setFirstName(e.target.value)} />
-            <input value={lastName} onChange={e => setLastName(e.target.value)} />
+            <input
+              value={firstName}
+              onChange={e => setFirstName(e.target.value)}
+            />
+            <input
+              value={lastName}
+              onChange={e => setLastName(e.target.value)}
+            />
           </div>
         ) : (
           <div
@@ -78,7 +91,9 @@ export function ClientListItem({ client, onDelete, onUpdate }: ClientListItemPro
             {hasImagePath(client.imagePath) ? (
               <Avatar src={API_BASE_URL + client.imagePath.trim()} />
             ) : (
-              <Avatar style={{ backgroundColor: '#395E66' }}>{getInitials(client.firstName, client.lastName)}</Avatar>
+              <Avatar style={{ backgroundColor: '#395E66' }}>
+                {getInitials(client.firstName, client.lastName)}
+              </Avatar>
             )}
             <Link
               to={`/clients/$clientId`}
@@ -101,7 +116,9 @@ export function ClientListItem({ client, onDelete, onUpdate }: ClientListItemPro
           color="blue"
           style={{ marginRight: '1rem' }}
         />
-        {(client.purchaseCount || 0) <= 1 ? 'book purchased' : 'books purchased'}
+        {(client.purchaseCount || 0) <= 1
+          ? 'book purchased'
+          : 'books purchased'}
       </Col>
       <Col
         span={3}
