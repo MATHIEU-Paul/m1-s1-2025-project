@@ -20,9 +20,9 @@ export class BookEntity extends BaseEntity {
   @Column({ name: 'title', type: 'varchar' })
   title: string;
 
-  @Column({ name: 'year_published', type: 'int' , nullable: true})
+  @Column({ name: 'year_published', type: 'int', nullable: true })
   yearPublished: number;
-  
+
   @Column({ name: 'number_pages', type: 'int', nullable: true })
   numberPages: number;
 
@@ -32,7 +32,9 @@ export class BookEntity extends BaseEntity {
   @Column({ name: 'author_id', type: 'uuid' })
   authorId: AuthorId;
 
-  @ManyToOne(() => AuthorEntity, (author) => author.books, { onDelete: 'CASCADE' })
+  @ManyToOne(() => AuthorEntity, (author) => author.books, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'author_id' })
   author: AuthorEntity;
 

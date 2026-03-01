@@ -61,17 +61,18 @@ export class PurchaseRepository {
     }));
   }
 
-  public async getPurchasesByBookId(bookId: BookId): Promise<BookPurchaseDetailsModel[]> {
+  public async getPurchasesByBookId(
+    bookId: BookId,
+  ): Promise<BookPurchaseDetailsModel[]> {
     const purchases = await this.purchaseRepository.find({
       where: { bookId },
       relations: {
-        client: true
+        client: true,
       },
       order: {
         purchaseDate: 'DESC',
       },
     });
-
 
     return purchases.map((purchase) => ({
       id: purchase.id,
@@ -125,9 +126,7 @@ export class PurchaseRepository {
     }, {});
   }
 
-  public async getPurchaseCountByAuthorId(
-    authorId: AuthorId,
-  ): Promise<number> {
+  public async getPurchaseCountByAuthorId(authorId: AuthorId): Promise<number> {
     return this.purchaseRepository.count({
       where: {
         book: {

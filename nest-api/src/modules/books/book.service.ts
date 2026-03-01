@@ -23,9 +23,10 @@ export class BookService {
   ): Promise<[BookWithPurchaseCountModel[], number]> {
     const [books, totalCount] = await this.bookRepository.getAllBooks(input);
 
-    const purchaseCountsByBookId = await this.purchaseService.getPurchaseCountsByBookIds(
-      books.map((book) => book.id),
-    );
+    const purchaseCountsByBookId =
+      await this.purchaseService.getPurchaseCountsByBookIds(
+        books.map((book) => book.id),
+      );
 
     const booksWithCount = books.map((book) => ({
       ...book,

@@ -1,10 +1,10 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { DEFAULT_BOOK_GENRES, DEFAULT_BOOK_TYPES } from './book-metadata.data';
 import {
-    BookTypeModel,
-    CreateBookTypeModel,
-    CreateGenreModel,
-    GenreModel,
+  BookTypeModel,
+  CreateBookTypeModel,
+  CreateGenreModel,
+  GenreModel,
 } from './book.model';
 import { BookRepository } from './book.repository';
 
@@ -24,8 +24,12 @@ export class BookMetadataService implements OnModuleInit {
     return this.bookRepository.getGenres();
   }
 
-  public async createBookType(input: CreateBookTypeModel): Promise<BookTypeModel> {
-    const existing = await this.bookRepository.getBookTypeByName(input.name.trim());
+  public async createBookType(
+    input: CreateBookTypeModel,
+  ): Promise<BookTypeModel> {
+    const existing = await this.bookRepository.getBookTypeByName(
+      input.name.trim(),
+    );
     if (existing) {
       return existing;
     }
@@ -34,7 +38,9 @@ export class BookMetadataService implements OnModuleInit {
   }
 
   public async createGenre(input: CreateGenreModel): Promise<GenreModel> {
-    const existing = await this.bookRepository.getGenreByName(input.name.trim());
+    const existing = await this.bookRepository.getGenreByName(
+      input.name.trim(),
+    );
     if (existing) {
       return existing;
     }

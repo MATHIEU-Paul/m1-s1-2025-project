@@ -24,7 +24,12 @@ export class AuthorRepository {
     // Optimized query to get authors with book count without loading all books
     const authors = await this.authorRepository
       .createQueryBuilder('author')
-      .select(['author.id', 'author.firstName', 'author.lastName', 'author.imagePath'])
+      .select([
+        'author.id',
+        'author.firstName',
+        'author.lastName',
+        'author.imagePath',
+      ])
       .loadRelationCountAndMap('author.bookCount', 'author.books')
       .getMany();
 
@@ -60,8 +65,11 @@ export class AuthorRepository {
       return undefined;
     }
 
-    const purchasesCount = await this.purchaseService.getPurchaseCountByAuthorId(author.id);
-    const purchasesAverage = author.books?.length ? purchasesCount / author.books.length : 0;
+    const purchasesCount =
+      await this.purchaseService.getPurchaseCountByAuthorId(author.id);
+    const purchasesAverage = author.books?.length
+      ? purchasesCount / author.books.length
+      : 0;
     return {
       ...author,
       purchasesAverage,

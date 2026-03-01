@@ -24,7 +24,9 @@ export class PurchaseService {
     return this.purchaseRepository.getPurchasesByClientId(clientId);
   }
 
-  public async getPurchasesByBookId(bookId: BookId): Promise<BookPurchaseDetailsModel[]> {
+  public async getPurchasesByBookId(
+    bookId: BookId,
+  ): Promise<BookPurchaseDetailsModel[]> {
     return this.purchaseRepository.getPurchasesByBookId(bookId);
   }
 
@@ -40,9 +42,7 @@ export class PurchaseService {
     return this.purchaseRepository.getPurchaseCountsByBookIds(bookIds);
   }
 
-  public async getPurchaseCountByAuthorId(
-    authorId: AuthorId,
-  ): Promise<number> {
+  public async getPurchaseCountByAuthorId(authorId: AuthorId): Promise<number> {
     return this.purchaseRepository.getPurchaseCountByAuthorId(authorId);
   }
 

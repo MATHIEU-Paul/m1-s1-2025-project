@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { AuthorId } from './author.entity';
 import {
-    AuthorDetailsModel,
-    AuthorModel,
-    AuthorWithBookCountModel,
-    CreateAuthorModel,
-    UpdateAuthorModel,
+  AuthorDetailsModel,
+  AuthorModel,
+  AuthorWithBookCountModel,
+  CreateAuthorModel,
+  UpdateAuthorModel,
 } from './author.model';
 import { AuthorRepository } from './author.repository';
 

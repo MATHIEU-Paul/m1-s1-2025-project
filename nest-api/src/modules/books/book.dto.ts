@@ -65,7 +65,7 @@ export class UpdateBookDto {
 
   @IsUUID(4)
   @IsOptional()
-  genreId?: GenreId;  
+  genreId?: GenreId;
 }
 
 export class GetBooksDto {

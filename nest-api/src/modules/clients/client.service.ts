@@ -21,11 +21,13 @@ export class ClientService {
   public async getAllClients(
     params?: FilterClientsModel,
   ): Promise<[ClientWithPurchaseCountModel[], number]> {
-    const [clients, totalCount] = await this.clientRepository.getAllClients(params);
+    const [clients, totalCount] =
+      await this.clientRepository.getAllClients(params);
 
-    const purchaseCountsByClientId = await this.purchaseService.getPurchaseCountsByClientIds(
-      clients.map((client) => client.id),
-    );
+    const purchaseCountsByClientId =
+      await this.purchaseService.getPurchaseCountsByClientIds(
+        clients.map((client) => client.id),
+      );
 
     const clientsWithCount = clients.map((client) => ({
       ...client,

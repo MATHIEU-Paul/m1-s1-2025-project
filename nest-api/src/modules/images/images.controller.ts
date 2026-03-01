@@ -12,7 +12,7 @@ export class ImagesController {
     @Res() res: Response,
   ) {
     const allowedFolders = ['books', 'authors', 'clients'];
-    
+
     if (!allowedFolders.includes(folder)) {
       throw new NotFoundException('Folder not found');
     }
@@ -24,17 +24,18 @@ export class ImagesController {
     }
 
     const ext = path.extname(filename).toLowerCase();
-    const contentType = {
-      '.png': 'image/png',
-      '.jpg': 'image/jpeg',
-      '.jpeg': 'image/jpeg',
-      '.gif': 'image/gif',
-      '.webp': 'image/webp',
-    }[ext] || 'application/octet-stream';
+    const contentType =
+      {
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.gif': 'image/gif',
+        '.webp': 'image/webp',
+      }[ext] || 'application/octet-stream';
 
     res.setHeader('Content-Type', contentType);
     res.setHeader('Cache-Control', 'public, max-age=31536000');
-    
+
     const fileStream = fs.createReadStream(imagePath);
     fileStream.pipe(res);
   }

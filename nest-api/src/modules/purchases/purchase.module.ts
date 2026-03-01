@@ -8,7 +8,9 @@ import { PurchaseRepository } from './purchase.repository';
 import { PurchaseService } from './purchase.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PurchaseEntity, ClientEntity, BookEntity])],
+  imports: [
+    TypeOrmModule.forFeature([PurchaseEntity, ClientEntity, BookEntity]),
+  ],
   controllers: [PurchaseController],
   providers: [PurchaseRepository, PurchaseService],
   exports: [PurchaseService],
