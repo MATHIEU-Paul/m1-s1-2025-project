@@ -1,3 +1,5 @@
+import { BookOutlined } from '@ant-design/icons'
+import { AppBreadcrumb } from '../../components/AppBreadcrumb'
 import {
   QueryableList,
   type QueryableListQuery,
@@ -23,6 +25,7 @@ export function BookList() {
 
   return (
     <>
+      <AppBreadcrumb items={[{ title: 'Books', icon: <BookOutlined /> }]} />
       <CreateBookModal onCreate={createBook} />
       <QueryableList<BookSortField, (typeof books)[number]>
         sortLabel="Sort books by"

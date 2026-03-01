@@ -1,3 +1,5 @@
+import { TeamOutlined } from '@ant-design/icons'
+import { AppBreadcrumb } from '../../components/AppBreadcrumb'
 import {
   QueryableList,
   type QueryableListQuery,
@@ -24,6 +26,7 @@ export function AuthorList() {
 
   return (
     <>
+      <AppBreadcrumb items={[{ title: 'Authors', icon: <TeamOutlined /> }]} />
       <CreateAuthorModal onCreate={createAuthor} />
       <QueryableList<AuthorSortField, (typeof authors)[number]>
         sortLabel="Sort authors by"

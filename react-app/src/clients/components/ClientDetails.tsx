@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, SaveOutlined, UserOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import {
     Avatar,
@@ -14,6 +14,7 @@ import {
     Typography,
 } from 'antd'
 import { useEffect, useState } from 'react'
+import { AppBreadcrumb } from '../../components/AppBreadcrumb'
 import { getInitials, hasImagePath } from '../../components/avatarFallback'
 import { API_BASE_URL } from '../../config/api'
 import { useClientDetailsProvider } from '../providers/useClientDetailsProvider'
@@ -70,6 +71,13 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
       direction="vertical"
       style={{ textAlign: 'left', width: '95%', padding: '1rem' }}
     >
+      <AppBreadcrumb
+        items={[
+          { title: 'Clients', href: '/clients', icon: <UserOutlined /> },
+          { title: `${client?.firstName} ${client?.lastName}` || 'Client Details' },
+        ]}
+      />
+
       <Link to="/clients">
         <ArrowLeftOutlined /> Back to Clients
       </Link>

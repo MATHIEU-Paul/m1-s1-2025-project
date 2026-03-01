@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, EditOutlined, TeamOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import {
   Avatar,
@@ -13,6 +13,7 @@ import {
   Typography,
 } from 'antd'
 import { useEffect, useState } from 'react'
+import { AppBreadcrumb } from '../../components/AppBreadcrumb'
 import { getInitials, hasImagePath } from '../../components/avatarFallback'
 import { API_BASE_URL } from '../../config/api'
 import { Route as authorsRoute } from '../../routes/authors'
@@ -58,6 +59,13 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
 
   return (
     <Space direction="vertical" style={{ textAlign: 'left', width: '95%' }}>
+      <AppBreadcrumb
+        items={[
+          { title: 'Authors', href: '/authors', icon: <TeamOutlined /> },
+          { title: `${author?.firstName} ${author?.lastName}` || 'Author Details' },
+        ]}
+      />
+
       <Link to={authorsRoute.to}>
         <ArrowLeftOutlined /> Back to list
       </Link>

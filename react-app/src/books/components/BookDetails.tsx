@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, BookOutlined, EditOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import {
     Avatar,
@@ -15,6 +15,7 @@ import {
     Typography,
 } from 'antd'
 import { useEffect, useState } from 'react'
+import { AppBreadcrumb } from '../../components/AppBreadcrumb'
 import { getInitials, hasImagePath } from '../../components/avatarFallback'
 import { API_BASE_URL } from '../../config/api'
 import { PurchaseBookModal } from '../../purchases/components/PurchaseBookModal'
@@ -72,6 +73,13 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
 
   return (
     <Space direction="vertical" style={{ textAlign: 'left', width: '95%' }}>
+      <AppBreadcrumb
+        items={[
+          { title: 'Books', href: '/books', icon: <BookOutlined /> },
+          { title: book?.title || 'Book Details' },
+        ]}
+      />
+
       <Link to={booksRoute.to}>
         <ArrowLeftOutlined /> Back to list
       </Link>

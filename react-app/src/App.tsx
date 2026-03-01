@@ -1,5 +1,7 @@
+import { HomeOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import './App.css'
+import { AppBreadcrumb } from './components/AppBreadcrumb'
 import { Hello } from './Hello'
 
 function App() {
@@ -13,6 +15,10 @@ function App() {
 
   return (
     <>
+      <AppBreadcrumb
+        showHome={false}
+        items={[{ title: 'Home', icon: <HomeOutlined /> }]}
+      />
       <Hello name={name}>How are you ?</Hello>
       <input value={newName} onChange={e => setNewName(e.target.value)} />
       <button onClick={onValidate}>OK</button>

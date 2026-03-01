@@ -1,3 +1,5 @@
+import { UserOutlined } from '@ant-design/icons'
+import { AppBreadcrumb } from '../../components/AppBreadcrumb'
 import {
   QueryableList,
   type QueryableListQuery,
@@ -30,6 +32,7 @@ export function ClientList() {
 
   return (
     <>
+      <AppBreadcrumb items={[{ title: 'Clients', icon: <UserOutlined /> }]} />
       <CreateClientModal onCreate={createClient} />
       <QueryableList<ClientSortField, (typeof clients)[number]>
         sortLabel="Sort clients by"
