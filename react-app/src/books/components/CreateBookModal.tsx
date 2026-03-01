@@ -27,7 +27,7 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
   const onClose = () => {
     setTitle('')
     setYearPublished(0)
-    setNumberPages(0)
+    setNumberPages(undefined)
     setCoverImage(undefined)
     setAuthorId(undefined)
     setBookTypeId(undefined)
