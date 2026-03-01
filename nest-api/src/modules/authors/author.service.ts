@@ -5,6 +5,7 @@ import {
   AuthorModel,
   AuthorWithBookCountModel,
   CreateAuthorModel,
+  FilterAuthorsModel,
   UpdateAuthorModel,
 } from './author.model';
 import { AuthorRepository } from './author.repository';
@@ -13,8 +14,10 @@ import { AuthorRepository } from './author.repository';
 export class AuthorService {
   constructor(private readonly authorRepository: AuthorRepository) {}
 
-  public async getAllAuthors(): Promise<AuthorWithBookCountModel[]> {
-    return this.authorRepository.getAllAuthors();
+  public async getAllAuthors(
+    params?: FilterAuthorsModel,
+  ): Promise<[AuthorWithBookCountModel[], number]> {
+    return this.authorRepository.getAllAuthors(params);
   }
 
   public async getAuthorById(

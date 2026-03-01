@@ -6,9 +6,16 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
-import { CreateAuthorDto, UpdateAuthorDto } from './author.dto';
+import { parseListQueryParams } from '../../utils/list-query';
+import {
+  CreateAuthorDto,
+  GetAllAuthorsDto,
+  UpdateAuthorDto,
+} from './author.dto';
 import { AuthorId } from './author.entity';
+import { AuthorSortField, GetAuthorsModel } from './author.model';
 import { AuthorService } from './author.service';
 
 @Controller('authors')
@@ -16,8 +23,25 @@ export class AuthorController {
   constructor(private readonly authorService: AuthorService) {}
 
   @Get()
-  getAllAuthors() {
-    return this.authorService.getAllAuthors();
+  async getAllAuthors(
+    @Query() rawParams: GetAllAuthorsDto,
+  ): Promise<GetAuthorsModel> {
+    const params = parseListQueryParams<AuthorSortField>(rawParams, {
+      defaultSortField: 'lastName',
+      defaultSortDirection: 'ASC',
+      defaultLimit: 10,
+      defaultOffset: 0,
+      minLimit: 1,
+      maxLimit: 100,
+    });
+
+    const [authors, totalCount] =
+      await this.authorService.getAllAuthors(params);
+
+    return {
+      data: authors,
+      totalCount,
+    };
   }
 
   @Post()

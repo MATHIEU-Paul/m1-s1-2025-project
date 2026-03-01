@@ -1,20 +1,51 @@
 import axios from 'axios'
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
 import type {
-    AuthorWithBookCountModel,
-    CreateAuthorModel,
-    UpdateAuthorModel,
+  AuthorWithBookCountModel,
+  CreateAuthorModel,
+  UpdateAuthorModel,
 } from '../AuthorModel'
+
+export type AuthorSortField = 'firstName' | 'lastName'
+
+type LoadAuthorsQuery = {
+  limit: number
+  offset: number
+  sortField: AuthorSortField
+  sortOrder: 'ASC' | 'DESC'
+}
+
+const DEFAULT_LOAD_QUERY: LoadAuthorsQuery = {
+  limit: 10,
+  offset: 0,
+  sortField: 'lastName',
+  sortOrder: 'ASC',
+}
 
 export const useAuthorProvider = () => {
   const [authors, setAuthors] = useState<AuthorWithBookCountModel[]>([])
+  const [totalCount, setTotalCount] = useState(0)
+  const lastQueryRef = useRef<LoadAuthorsQuery>(DEFAULT_LOAD_QUERY)
 
-  const loadAuthors = useCallback(() => {
+  const loadAuthors = useCallback((query?: Partial<LoadAuthorsQuery>) => {
+    const effectiveQuery: LoadAuthorsQuery = {
+      ...lastQueryRef.current,
+      ...query,
+    }
+    lastQueryRef.current = effectiveQuery
+
     axios
-      .get(`${API_BASE_URL}/authors`)
+      .get(`${API_BASE_URL}/authors`, {
+        params: {
+          limit: effectiveQuery.limit,
+          offset: effectiveQuery.offset,
+          sort: `${effectiveQuery.sortField},${effectiveQuery.sortOrder}`,
+        },
+      })
       .then(response => {
-        setAuthors(response.data)
+        setAuthors(response.data.data)
+        setTotalCount(response.data.totalCount ?? 0)
       })
       .catch(err => console.error(err))
   }, [])
@@ -49,5 +80,12 @@ export const useAuthorProvider = () => {
     [loadAuthors],
   )
 
-  return { authors, loadAuthors, createAuthor, updateAuthor, deleteAuthor }
+  return {
+    authors,
+    totalCount,
+    loadAuthors,
+    createAuthor,
+    updateAuthor,
+    deleteAuthor,
+  }
 }

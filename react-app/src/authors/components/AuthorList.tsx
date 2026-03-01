@@ -1,28 +1,51 @@
-import { useEffect } from 'react'
-import { useAuthorProvider } from '../providers/useAuthorProvider'
+import {
+  QueryableList,
+  type QueryableListQuery,
+} from '../../components/QueryableList'
+import {
+  useAuthorProvider,
+  type AuthorSortField,
+} from '../providers/useAuthorProvider'
 import { AuthorListItem } from './AuthorListItem'
 import { CreateAuthorModal } from './CreateAuthorModal'
 
 export function AuthorList() {
-  const { authors, loadAuthors, deleteAuthor, createAuthor } =
+  const { authors, totalCount, loadAuthors, deleteAuthor, createAuthor } =
     useAuthorProvider()
 
-  useEffect(() => {
-    loadAuthors()
-  }, [loadAuthors])
+  const onQueryChange = (query: QueryableListQuery<AuthorSortField>) => {
+    loadAuthors({
+      limit: query.limit,
+      offset: query.offset,
+      sortField: query.sortField,
+      sortOrder: query.sortOrder,
+    })
+  }
 
   return (
     <>
       <CreateAuthorModal onCreate={createAuthor} />
-      <div style={{ padding: '0 .5rem' }}>
-        {authors.map(author => (
-          <AuthorListItem
-            key={author.id}
-            author={author}
-            onDelete={deleteAuthor}
-          />
-        ))}
-      </div>
+      <QueryableList<AuthorSortField, (typeof authors)[number]>
+        sortLabel="Sort authors by"
+        initialSortField="lastName"
+        initialSortOrder="ASC"
+        initialPage={1}
+        initialPageSize={10}
+        sortOptions={[
+          { value: 'lastName', label: 'Last name' },
+          { value: 'firstName', label: 'First name' },
+        ]}
+        onQueryChange={onQueryChange}
+        items={authors}
+        getItemKey={author => author.id}
+        renderItem={author => (
+          <AuthorListItem author={author} onDelete={deleteAuthor} />
+        )}
+        listStyle={{ padding: '0 .5rem' }}
+        totalCount={totalCount}
+        pageSizeOptions={[5, 10, 20, 50]}
+        entityLabel="authors"
+      />
     </>
   )
 }

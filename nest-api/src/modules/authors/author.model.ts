@@ -1,3 +1,4 @@
+import { ListQueryModel } from '../../utils/list-query';
 import { AuthorId } from './author.entity';
 
 export type AuthorModel = {
@@ -29,3 +30,12 @@ export type CreateAuthorModel = {
 };
 
 export type UpdateAuthorModel = Partial<CreateAuthorModel>;
+
+export type AuthorSortField = keyof AuthorModel;
+
+export type FilterAuthorsModel = ListQueryModel<AuthorSortField>;
+
+export type GetAuthorsModel = {
+  totalCount: number;
+  data: AuthorWithBookCountModel[];
+};

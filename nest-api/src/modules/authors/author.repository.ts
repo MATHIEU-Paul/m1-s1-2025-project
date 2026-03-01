@@ -9,6 +9,7 @@ import {
   AuthorModel,
   AuthorWithBookCountModel,
   CreateAuthorModel,
+  FilterAuthorsModel,
   UpdateAuthorModel,
 } from './author.model';
 
@@ -20,9 +21,13 @@ export class AuthorRepository {
     private readonly purchaseService: PurchaseService,
   ) {}
 
-  public async getAllAuthors(): Promise<AuthorWithBookCountModel[]> {
-    // Optimized query to get authors with book count without loading all books
-    const authors = await this.authorRepository
+  public async getAllAuthors(
+    input?: FilterAuthorsModel,
+  ): Promise<[AuthorWithBookCountModel[], number]> {
+    const sortField = input?.sort?.field ?? 'lastName';
+    const sortDirection = input?.sort?.direction ?? 'ASC';
+
+    const [authors, totalCount] = await this.authorRepository
       .createQueryBuilder('author')
       .select([
         'author.id',
@@ -31,15 +36,22 @@ export class AuthorRepository {
         'author.imagePath',
       ])
       .loadRelationCountAndMap('author.bookCount', 'author.books')
-      .getMany();
+      .orderBy(`author.${sortField}`, sortDirection)
+      .addOrderBy('author.firstName', 'ASC')
+      .take(input?.limit)
+      .skip(input?.offset)
+      .getManyAndCount();
 
-    return authors.map((author) => ({
-      id: author.id,
-      firstName: author.firstName,
-      lastName: author.lastName,
-      imagePath: author.imagePath,
-      bookCount: author.bookCount ?? 0,
-    }));
+    return [
+      authors.map((author) => ({
+        id: author.id,
+        firstName: author.firstName,
+        lastName: author.lastName,
+        imagePath: author.imagePath,
+        bookCount: author.bookCount ?? 0,
+      })),
+      totalCount,
+    ];
   }
 
   public async getAuthorById(

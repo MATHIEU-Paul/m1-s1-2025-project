@@ -115,39 +115,45 @@ export function QueryableList<TSortField extends string, TItem>({
 
   return (
     <>
-      <Space
-        align="center"
-        wrap
+      <div
         style={{
-          width: '100%',
-          justifyContent: 'space-between',
-          padding: '0 .5rem',
+          padding: '0 1rem',
           marginTop: '1rem',
-          marginBottom: '.5rem',
+          marginBottom: '0.75rem',
         }}
       >
-        <Typography.Text strong>{sortLabel}</Typography.Text>
-        <Space align="center" wrap>
-          <Select<TSortField>
-            value={sortField}
-            onChange={value => onSortFieldChange(value as TSortField)}
-            style={{ width: 180 }}
-            options={sortOptions}
-          />
-          <Radio.Group
-            optionType="button"
-            buttonStyle="solid"
-            value={sortOrder}
-            onChange={event =>
-              onSortOrderChange(event.target.value as ListSortOrder)
-            }
-            options={[
-              { label: 'Ascending', value: 'ASC' },
-              { label: 'Descending', value: 'DESC' },
-            ]}
-          />
-        </Space>
-      </Space>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '0.75rem',
+            flexWrap: 'wrap',
+          }}
+        >
+          <Typography.Text strong>{sortLabel}</Typography.Text>
+          <Space align="center" wrap>
+            <Select<TSortField>
+              value={sortField}
+              onChange={value => onSortFieldChange(value as TSortField)}
+              style={{ width: 180, maxWidth: '100%' }}
+              options={sortOptions}
+            />
+            <Radio.Group
+              optionType="button"
+              buttonStyle="solid"
+              value={sortOrder}
+              onChange={event =>
+                onSortOrderChange(event.target.value as ListSortOrder)
+              }
+              options={[
+                { label: 'Ascending', value: 'ASC' },
+                { label: 'Descending', value: 'DESC' },
+              ]}
+            />
+          </Space>
+        </div>
+      </div>
 
       <div style={listStyle ?? { padding: '0 .5rem' }}>
         {items.map(item => (
@@ -157,9 +163,10 @@ export function QueryableList<TSortField extends string, TItem>({
 
       <div
         style={{
-          padding: '0 .5rem 1rem .5rem',
+          padding: '0 1rem 1rem 1rem',
           display: 'flex',
           justifyContent: 'flex-end',
+          marginTop: '0.75rem',
         }}
       >
         <Pagination
