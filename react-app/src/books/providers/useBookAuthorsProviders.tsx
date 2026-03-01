@@ -10,7 +10,7 @@ export const useBookAuthorsProviders = () => {
     axios
       .get(`${API_BASE_URL}/authors`)
       .then(data => {
-        setAuthors(data.data)
+        setAuthors(data.data.data)
       })
       .catch(err => console.error(err))
   }, [])

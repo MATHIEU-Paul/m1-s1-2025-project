@@ -2,7 +2,6 @@ export const DEFAULT_BOOK_TYPES = [
   'Ebook',
   'Paperback',
   'Hardcover',
-  'Audiobook',
 ];
 
 export const DEFAULT_BOOK_GENRES = [
@@ -13,4 +12,5 @@ export const DEFAULT_BOOK_GENRES = [
   'Historical',
   'Romance',
   'Adventure',
+  'Philosophy',
 ];
