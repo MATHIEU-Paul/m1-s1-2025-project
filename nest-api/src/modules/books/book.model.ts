@@ -57,7 +57,9 @@ export type UpdateBookModel = Partial<CreateBookModel>;
 
 export type BookSortField = keyof BookModel | 'authorName';
 
-export type FilterBooksModel = ListQueryModel<BookSortField>;
+export type FilterBooksModel = ListQueryModel<BookSortField> & {
+  genreId?: GenreId;
+};
 
 export type GetBooksModel = {
   totalCount: number;

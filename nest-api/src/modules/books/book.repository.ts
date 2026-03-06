@@ -53,7 +53,12 @@ export class BookRepository {
             }),
           };
 
+    const where = input?.genreId
+      ? { genre: { id: input.genreId } }
+      : undefined;
+
     const [books, totalCount] = await this.bookRepository.findAndCount({
+      where,
       take: input?.limit,
       skip: input?.offset,
       relations: { author: true, bookType: true, genre: true },

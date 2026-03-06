@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { API_BASE_URL } from '../../config/api'
 import type {
   BookWithPurchaseCountModel,
@@ -14,6 +14,7 @@ type LoadBooksQuery = {
   offset: number
   sortField: BookSortField
   sortOrder: 'ASC' | 'DESC'
+  genreId?: string
 }
 
 const DEFAULT_LOAD_QUERY: LoadBooksQuery = {
@@ -28,7 +29,7 @@ export const useBookProvider = () => {
   const [totalCount, setTotalCount] = useState(0)
   const lastQueryRef = useRef<LoadBooksQuery>(DEFAULT_LOAD_QUERY)
 
-  const loadBooks = (query?: Partial<LoadBooksQuery>) => {
+  const loadBooks = useCallback((query?: Partial<LoadBooksQuery>) => {
     const effectiveQuery: LoadBooksQuery = {
       ...lastQueryRef.current,
       ...query,
@@ -41,6 +42,7 @@ export const useBookProvider = () => {
           limit: effectiveQuery.limit,
           offset: effectiveQuery.offset,
           sort: `${effectiveQuery.sortField},${effectiveQuery.sortOrder}`,
+          ...(effectiveQuery.genreId ? { genreId: effectiveQuery.genreId } : {}),
         },
       })
       .then(data => {
@@ -48,7 +50,7 @@ export const useBookProvider = () => {
         setTotalCount(data.data.totalCount ?? 0)
       })
       .catch(err => console.error(err))
-  }
+  }, [])
 
   const createBook = (book: CreateBookModel) => {
     axios

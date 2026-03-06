@@ -81,4 +81,8 @@ export class GetBooksDto {
   @IsString()
   @IsOptional()
   sort?: string;
+
+  @IsUUID(4)
+  @IsOptional()
+  genreId?: GenreId;
 }

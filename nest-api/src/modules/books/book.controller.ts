@@ -33,7 +33,10 @@ export class BookController {
       maxLimit: 100,
     });
 
-    const [books, totalCount] = await this.bookService.getAllBooks(params);
+    const [books, totalCount] = await this.bookService.getAllBooks({
+      ...params,
+      genreId: input.genreId,
+    });
 
     return {
       data: books,

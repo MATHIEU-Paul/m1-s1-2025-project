@@ -30,6 +30,8 @@ type QueryableListProps<TSortField extends string, TItem> = {
   initialPage?: number
   initialPageSize?: number
   sortOptions: SortOption<TSortField>[]
+  /** Optional controls rendered next to the sort selectors. */
+  filterComponent?: ReactNode
   onQueryChange: (query: QueryableListQuery<TSortField>) => void
   items: TItem[]
   getItemKey: (item: TItem) => string
@@ -56,6 +58,7 @@ export function QueryableList<TSortField extends string, TItem>({
   initialPage = 1,
   initialPageSize = 10,
   sortOptions,
+  filterComponent,
   onQueryChange,
   items,
   getItemKey,
@@ -133,6 +136,7 @@ export function QueryableList<TSortField extends string, TItem>({
         >
           <Typography.Text strong>{sortLabel}</Typography.Text>
           <Space align="center" wrap>
+            {filterComponent}
             <Select<TSortField>
               value={sortField}
               onChange={value => onSortFieldChange(value as TSortField)}
