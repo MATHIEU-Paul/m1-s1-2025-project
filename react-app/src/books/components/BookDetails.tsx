@@ -12,7 +12,6 @@ import {
   InputNumber,
   List,
   message,
-  Modal,
   Select,
   Skeleton,
   Space,
@@ -34,17 +33,15 @@ interface BookDetailsProps {
 export const BookDetails = ({ id }: BookDetailsProps) => {
   const { isLoading, book, loadBook, updateBook } = useBookDetailsProvider(id)
   const { authors, loadAuthors } = useBookAuthorsProviders()
-  // Modal state
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
   const [form] = Form.useForm()
 
   useEffect(() => {
     loadBook()
   }, [id, loadBook])
 
-  // Open modal and pre-fill fields with current book data
-  const showEditModal = () => {
-    loadAuthors()
+  // Keep form fields synced with latest book details
+  useEffect(() => {
     if (book) {
       form.setFieldsValue({
         title: book.title,
@@ -54,11 +51,29 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
         booktypeId: book.bookType?.id,
         genreId: book.genre?.id,
       })
-      setIsModalOpen(true)
     }
+  }, [book, form])
+
+  const startEditing = () => {
+    loadAuthors()
+    setIsEditing(true)
   }
 
-  const handleOk = async () => {
+  const cancelEditing = () => {
+    if (book) {
+      form.setFieldsValue({
+        title: book.title,
+        authorId: book.author.id,
+        yearPublished: book.yearPublished,
+        numberPages: book.numberPages,
+        booktypeId: book.bookType?.id,
+        genreId: book.genre?.id,
+      })
+    }
+    setIsEditing(false)
+  }
+
+  const saveChanges = async () => {
     try {
       const values = await form.validateFields()
       await updateBook(values)
@@ -66,7 +81,7 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
       // Reload details after update
       await loadBook()
 
-      setIsModalOpen(false)
+      setIsEditing(false)
       message.success('Book updated successfully!')
     } catch (error) {
       console.error('Update failed:', error)
@@ -99,31 +114,96 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
 
         <Space>
           <PurchaseBookModal bookId={id} />
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            onClick={showEditModal}
-          >
-            Edit Info
-          </Button>
+          {isEditing ? (
+            <>
+              <Button type="primary" onClick={saveChanges}>
+                Save
+              </Button>
+              <Button onClick={cancelEditing}>Cancel</Button>
+            </>
+          ) : (
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={startEditing}
+              disabled={!book}
+            >
+              Edit Info
+            </Button>
+          )}
         </Space>
       </div>
 
-      <Typography.Title level={2}>{book?.title}</Typography.Title>
+      {isEditing ? (
+        <Form form={form} layout="vertical" name="edit_book_form">
+          <Form.Item
+            name="title"
+            label="Book Title"
+            rules={[{ required: true, message: 'Please enter the title' }]}
+          >
+            <Input placeholder="Enter book title" />
+          </Form.Item>
 
-      <Typography.Title level={3} type="secondary">
-        By {book?.author?.firstName} {book?.author?.lastName}
-      </Typography.Title>
+          <Form.Item
+            name="authorId"
+            label="Author"
+            rules={[{ required: true }]}
+          >
+            <Select
+              placeholder="Select an author"
+              options={authors.map(a => ({
+                label: `${a.firstName} ${a.lastName}`,
+                value: a.id,
+              }))}
+              disabled={!isEditing}
+            />
+          </Form.Item>
 
-      <Typography.Text strong>Published Year: </Typography.Text>
-      <Typography.Text>{book?.yearPublished}</Typography.Text>
+          <Form.Item
+            name="yearPublished"
+            label="Publication Year"
+            rules={[{ required: true, message: 'Please enter the year' }]}
+          >
+            <InputNumber
+              style={{ width: '100%' }}
+              placeholder="YYYY"
+              disabled={!isEditing}
+            />
+          </Form.Item>
 
-      {book?.coverPath && (
-        <img
-          src={API_BASE_URL + book.coverPath}
-          alt={`${book.title} cover`}
-          style={{ marginTop: '1rem', maxWidth: '200px', borderRadius: '5px' }}
-        />
+          <Form.Item
+            name="numberPages"
+            label="Number of Pages"
+            rules={[
+              { required: false, message: 'Please enter the number of pages' },
+            ]}
+          >
+            <InputNumber
+              style={{ width: '100%' }}
+              placeholder="Enter number of pages"
+              disabled={!isEditing}
+            />
+          </Form.Item>
+        </Form>
+      ) : (
+        <>
+          <Typography.Title level={2}>{book?.title}</Typography.Title>
+
+          <Typography.Title level={3} type="secondary">
+            By {book?.author?.firstName} {book?.author?.lastName}
+          </Typography.Title>
+
+          <Typography.Text strong>Published Year: </Typography.Text>
+          <Typography.Text>{book?.yearPublished}</Typography.Text>
+
+          {book?.coverPath && (
+            <img
+              src={API_BASE_URL + book.coverPath}
+              alt={`${book.title} cover`}
+              style={{ marginTop: '1rem', maxWidth: '200px', borderRadius: '5px' }}
+            />
+          )}
+        </>
       )}
 
       <Typography.Title level={4} style={{ marginTop: '1rem' }}>
@@ -160,74 +240,6 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
           )}
         />
       )}
-
-      <Modal
-        title="Edit Book Information"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={() => setIsModalOpen(false)}
-        okText="Save Changes"
-        cancelText="Cancel"
-        destroyOnClose
-      >
-        <Form form={form} layout="vertical" name="edit_book_form">
-          <Form.Item
-            name="title"
-            label="Book Title"
-            rules={[{ required: true, message: 'Please enter the title' }]}
-          >
-            <Input placeholder="Enter book title" />
-          </Form.Item>
-
-          <Form.Item
-            name="authorId"
-            label="Author"
-            rules={[{ required: true }]}
-          >
-            <Select
-              placeholder="Select an author"
-              options={authors.map(a => ({
-                label: `${a.firstName} ${a.lastName}`,
-                value: a.id,
-              }))}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="yearPublished"
-            label="Publication Year"
-            rules={[{ required: true, message: 'Please enter the year' }]}
-          >
-            <InputNumber style={{ width: '100%' }} placeholder="YYYY" />
-          </Form.Item>
-
-          <Form.Item
-            name="numberpages"
-            label="Number of Pages"
-            rules={[
-              { required: false, message: 'Please enter the number of pages' },
-            ]}
-          >
-            <InputNumber
-              style={{ width: '100%' }}
-              placeholder="Enter number of pages"
-            />
-          </Form.Item>
-
-          {/* <Form.Item
-            name="bookType" label="Book Type"
-            rules={[{ required: false, message: 'Please select a book type' }]}
-          >
-            <Select 
-              placeholder="Select a book type"
-              options={bookTypes.map(bt => ({
-                label: bt.name,
-                value: bt.id
-              }))}
-            />
-          </Form.Item> */}
-        </Form>
-      </Modal>
     </Space>
   )
 }
