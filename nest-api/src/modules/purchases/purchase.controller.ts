@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { BookId } from '../books/entities/book.entity';
 import { ClientId } from '../clients/client.entity';
 import { CreatePurchaseDto } from './purchase.dto';
@@ -8,9 +8,9 @@ import { PurchaseService } from './purchase.service';
 export class PurchaseController {
   constructor(private readonly purchaseService: PurchaseService) {}
 
-  @Get()
-  public async getAllPurchases() {
-    return this.purchaseService.getAllPurchases();
+  @Get('home-summary')
+  public async getHomeSummary(@Query('limit') limit?: string) {
+    return this.purchaseService.getHomeSummary(limit);
   }
 
   @Get('client/:clientId')

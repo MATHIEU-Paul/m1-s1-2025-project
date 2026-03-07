@@ -9,6 +9,7 @@ import {
   BookPurchaseDetailsModel,
   ClientPurchaseDetailsModel,
   CreatePurchaseModel,
+  PurchaseHomeSummaryModel,
   PurchaseModel,
 } from './purchase.model';
 
@@ -23,17 +24,53 @@ export class PurchaseRepository {
     private readonly bookRepository: Repository<BookEntity>,
   ) {}
 
-  public async getAllPurchases(): Promise<PurchaseModel[]> {
-    const purchases = await this.purchaseRepository.find({
-      order: { purchaseDate: 'DESC' },
-    });
+  public async getHomeSummary(
+    limit: number,
+  ): Promise<PurchaseHomeSummaryModel> {
+    const [latestSalesEntities, aggregateRow] = await Promise.all([
+      this.purchaseRepository.find({
+        relations: {
+          client: true,
+          book: true,
+        },
+        order: {
+          purchaseDate: 'DESC',
+          id: 'DESC',
+        },
+        take: limit,
+      }),
+      this.purchaseRepository
+        .createQueryBuilder('purchase')
+        .select('COUNT(*)', 'totalSales')
+        .addSelect('COUNT(DISTINCT purchase.client_id)', 'distinctCustomers')
+        .addSelect('COUNT(DISTINCT purchase.book_id)', 'distinctBooks')
+        .addSelect('MAX(purchase.purchase_date)', 'lastSaleDate')
+        .getRawOne<{
+          totalSales: string;
+          distinctCustomers: string;
+          distinctBooks: string;
+          lastSaleDate: string | null;
+        }>(),
+    ]);
 
-    return purchases.map((purchase) => ({
-      id: purchase.id,
-      clientId: purchase.clientId,
-      bookId: purchase.bookId,
-      purchaseDate: purchase.purchaseDate.toISOString(),
-    }));
+    return {
+      latestSales: latestSalesEntities.map((purchase) => ({
+        id: purchase.id,
+        clientId: purchase.clientId,
+        bookId: purchase.bookId,
+        purchaseDate: purchase.purchaseDate.toISOString(),
+        clientName: `${purchase.client.firstName} ${purchase.client.lastName}`,
+        bookTitle: purchase.book.title,
+      })),
+      stats: {
+        totalSales: Number(aggregateRow?.totalSales ?? 0),
+        distinctCustomers: Number(aggregateRow?.distinctCustomers ?? 0),
+        distinctBooks: Number(aggregateRow?.distinctBooks ?? 0),
+        lastSaleDate: aggregateRow?.lastSaleDate
+          ? new Date(aggregateRow.lastSaleDate).toISOString()
+          : null,
+      },
+    };
   }
 
   public async getPurchasesByClientId(

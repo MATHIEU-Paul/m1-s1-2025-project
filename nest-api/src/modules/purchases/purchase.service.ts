@@ -6,16 +6,30 @@ import {
   BookPurchaseDetailsModel,
   ClientPurchaseDetailsModel,
   CreatePurchaseModel,
+  PurchaseHomeSummaryModel,
   PurchaseModel,
 } from './purchase.model';
 import { PurchaseRepository } from './purchase.repository';
 
 @Injectable()
 export class PurchaseService {
+  private static readonly DEFAULT_HOME_LIMIT = 5;
+  private static readonly MAX_HOME_LIMIT = 20;
+
   constructor(private readonly purchaseRepository: PurchaseRepository) {}
 
-  public async getAllPurchases(): Promise<PurchaseModel[]> {
-    return this.purchaseRepository.getAllPurchases();
+  public async getHomeSummary(
+    limit?: string,
+  ): Promise<PurchaseHomeSummaryModel> {
+    const parsedLimit = Number(limit);
+    const effectiveLimit =
+      Number.isFinite(parsedLimit) &&
+      parsedLimit > 0 &&
+      parsedLimit <= PurchaseService.MAX_HOME_LIMIT
+        ? Math.floor(parsedLimit)
+        : PurchaseService.DEFAULT_HOME_LIMIT;
+
+    return this.purchaseRepository.getHomeSummary(effectiveLimit);
   }
 
   public async getPurchasesByClientId(

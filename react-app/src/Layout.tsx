@@ -174,7 +174,6 @@ export function Layout({ children }: LayoutProps) {
       <div
         style={{
           width: '100%',
-          overflowY: 'scroll',
           padding: '2rem',
           boxSizing: 'border-box',
         }}
