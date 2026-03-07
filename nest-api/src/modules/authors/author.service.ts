@@ -20,9 +20,7 @@ export class AuthorService {
     return this.authorRepository.getAllAuthors(params);
   }
 
-  public async getAuthorById(
-    id: AuthorId,
-  ): Promise<AuthorDetailsModel> {
+  public async getAuthorById(id: AuthorId): Promise<AuthorDetailsModel> {
     const author = await this.authorRepository.getAuthorById(id);
     if (!author) {
       throw new NotFoundException(`Author with id ${id} not found`);

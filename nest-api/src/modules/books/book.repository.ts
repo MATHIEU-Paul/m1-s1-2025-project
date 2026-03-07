@@ -4,14 +4,14 @@ import { deleteImage, saveImage } from 'src/utils/image';
 import { DataSource, Repository } from 'typeorm';
 import { AuthorEntity } from '../authors/author.entity';
 import {
-    BookModel,
-    BookTypeModel,
-    CreateBookModel,
-    CreateBookTypeModel,
-    CreateGenreModel,
-    FilterBooksModel,
-    GenreModel,
-    UpdateBookModel,
+  BookModel,
+  BookTypeModel,
+  CreateBookModel,
+  CreateBookTypeModel,
+  CreateGenreModel,
+  FilterBooksModel,
+  GenreModel,
+  UpdateBookModel,
 } from './book.model';
 import { BookEntity, BookId } from './entities/book.entity';
 import { BookTypeEntity } from './entities/booktype.entity';
@@ -53,9 +53,7 @@ export class BookRepository {
             }),
           };
 
-    const where = input?.genreId
-      ? { genre: { id: input.genreId } }
-      : undefined;
+    const where = input?.genreId ? { genre: { id: input.genreId } } : undefined;
 
     const [books, totalCount] = await this.bookRepository.findAndCount({
       where,

@@ -2,12 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PurchaseService } from '../purchases/purchase.service';
 import { ClientId } from './client.entity';
 import {
-    ClientDetailsModel,
-    ClientModel,
-    ClientWithPurchaseCountModel,
-    CreateClientModel,
-    FilterClientsModel,
-    UpdateClientModel,
+  ClientDetailsModel,
+  ClientModel,
+  ClientWithPurchaseCountModel,
+  CreateClientModel,
+  FilterClientsModel,
+  UpdateClientModel,
 } from './client.model';
 import { ClientRepository } from './client.repository';
 
@@ -37,9 +37,7 @@ export class ClientService {
     return [clientsWithCount, totalCount];
   }
 
-  public async getClientById(
-    id: ClientId,
-  ): Promise<ClientDetailsModel> {
+  public async getClientById(id: ClientId): Promise<ClientDetailsModel> {
     const client = await this.clientRepository.getClientById(id);
     if (!client) {
       throw new NotFoundException(`Client with id ${id} not found`);

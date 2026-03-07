@@ -5,12 +5,12 @@ import { Repository } from 'typeorm';
 import { PurchaseService } from '../purchases/purchase.service';
 import { AuthorEntity, AuthorId } from './author.entity';
 import {
-    AuthorDetailsModel,
-    AuthorModel,
-    AuthorWithBookCountModel,
-    CreateAuthorModel,
-    FilterAuthorsModel,
-    UpdateAuthorModel,
+  AuthorDetailsModel,
+  AuthorModel,
+  AuthorWithBookCountModel,
+  CreateAuthorModel,
+  FilterAuthorsModel,
+  UpdateAuthorModel,
 } from './author.model';
 
 @Injectable()

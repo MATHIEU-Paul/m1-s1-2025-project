@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthUserEntity } from '../auth/auth.entity';
 import { AuthorEntity } from '../authors/author.entity';
 import { BookEntity } from '../books/entities/book.entity';
 import { BookTypeEntity } from '../books/entities/booktype.entity';
@@ -13,6 +14,7 @@ import { PurchaseEntity } from '../purchases/purchase.entity';
       type: 'sqlite',
       database: 'db',
       entities: [
+        AuthUserEntity,
         AuthorEntity,
         BookEntity,
         BookTypeEntity,

@@ -2,12 +2,16 @@ import {
   BookOutlined,
   HomeOutlined,
   InfoOutlined,
+  LockOutlined,
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Space, Switch, type MenuProps } from 'antd'
+import { Avatar, Button, Space, Switch, Typography, type MenuProps } from 'antd'
 import Menu from 'antd/es/menu/menu'
+import { useState } from 'react'
+import { AuthModal } from './auth/AuthModal'
+import { useAuth } from './auth/useAuth'
 import { useTheme } from './providers/useTheme'
 import { Route as aboutRoute } from './routes/about'
 import { Route as authorsRoute } from './routes/authors'
@@ -22,6 +26,9 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   const { isDarkMode, toggleTheme } = useTheme()
+  const { user, logout, isLoading } = useAuth()
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const items: Required<MenuProps>['items'] = [
     {
       label: <Link to={indexRoute.to}>Home</Link>,
@@ -103,7 +110,59 @@ export function Layout({ children }: LayoutProps) {
           />
         </div>
 
-        <div style={{ marginRight: '3rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            marginRight: '2rem',
+          }}
+        >
+          {isLoading ? null : user ? (
+            <>
+              <Avatar
+                size="small"
+                icon={<UserOutlined />}
+                style={{ backgroundColor: 'var(--app-header-bg)' }}
+              />
+              <Typography.Text
+                style={{
+                  marginRight: '0.25rem',
+                  color: 'var(--app-header-text)',
+                  width: 'max-content',
+                }}
+              >
+                {user.username}
+              </Typography.Text>
+              <Button className="auth-action-btn" onClick={() => void logout()}>
+                Log out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                className="auth-action-btn"
+                icon={<LockOutlined />}
+                onClick={() => {
+                  setAuthMode('login')
+                  setIsAuthModalOpen(true)
+                }}
+              >
+                Log in
+              </Button>
+              <Button
+                className="auth-action-btn"
+                type="primary"
+                onClick={() => {
+                  setAuthMode('register')
+                  setIsAuthModalOpen(true)
+                }}
+              >
+                Sign up
+              </Button>
+            </>
+          )}
+
           <Switch
             checked={isDarkMode}
             onChange={toggleTheme}
@@ -122,6 +181,12 @@ export function Layout({ children }: LayoutProps) {
       >
         {children}
       </div>
+
+      <AuthModal
+        open={isAuthModalOpen}
+        mode={authMode}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
     </Space>
   )
 }

@@ -1,5 +1,6 @@
 import { createRootRoute, Outlet, useLocation } from '@tanstack/react-router'
 import { useEffect } from 'react'
+import { AuthProvider } from '../auth/AuthProvider'
 import { Layout } from '../Layout'
 import { ThemeProvider } from '../providers/ThemeProvider'
 
@@ -52,10 +53,12 @@ function PageMetadata() {
 const RootLayout = () => {
   return (
     <ThemeProvider>
-      <PageMetadata />
-      <Layout>
-        <Outlet />
-      </Layout>
+      <AuthProvider>
+        <PageMetadata />
+        <Layout>
+          <Outlet />
+        </Layout>
+      </AuthProvider>
     </ThemeProvider>
   )
 }

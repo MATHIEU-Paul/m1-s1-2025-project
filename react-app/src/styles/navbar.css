@@ -58,3 +58,9 @@
 .main-nav.ant-menu-horizontal > .ant-menu-submenu::after {
   border-bottom: none !important;
 }
+
+.auth-action-btn.ant-btn {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 10px;
+}

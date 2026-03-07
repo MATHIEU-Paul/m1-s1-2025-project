@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './modules/auth/auth.module';
 import { AuthorModule } from './modules/authors/author.module';
 import { BookModule } from './modules/books/book.module';
 import { ClientModule } from './modules/clients/client.module';
@@ -11,6 +12,7 @@ import { PurchaseModule } from './modules/purchases/purchase.module';
 @Module({
   imports: [
     DatabaseModule,
+    AuthModule,
     AuthorModule,
     BookModule,
     ClientModule,
