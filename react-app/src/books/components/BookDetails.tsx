@@ -1,7 +1,10 @@
 import {
   ArrowLeftOutlined,
   BookOutlined,
+  CalendarOutlined,
   EditOutlined,
+  FileTextOutlined,
+  UserOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import {
@@ -16,6 +19,11 @@ import {
   Skeleton,
   Space,
   Typography,
+  Row,
+  Col,
+  Card,
+  Divider,
+  Tag,
 } from 'antd'
 import { useEffect, useState } from 'react'
 import { AppBreadcrumb } from '../../components/AppBreadcrumb'
@@ -25,7 +33,9 @@ import { PurchaseBookModal } from '../../purchases/components/PurchaseBookModal'
 import { Route as booksRoute } from '../../routes/books'
 import { useBookAuthorsProviders } from '../providers/useBookAuthorsProviders'
 import { useBookDetailsProvider } from '../providers/useBookDetailsProvider'
+import { useBookMetadataProvider } from '../providers/useBookMetadataProvider' // Utilisation du metadata provider
 
+const { Title, Text } = Typography
 interface BookDetailsProps {
   id: string
 }
@@ -33,6 +43,9 @@ interface BookDetailsProps {
 export const BookDetails = ({ id }: BookDetailsProps) => {
   const { isLoading, book, loadBook, updateBook } = useBookDetailsProvider(id)
   const { authors, loadAuthors } = useBookAuthorsProviders()
+  
+  const { genres, bookTypes, loadGenres, loadBookTypes } = useBookMetadataProvider()
+
   const [isEditing, setIsEditing] = useState(false)
   const [form] = Form.useForm()
 
@@ -40,7 +53,6 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
     loadBook()
   }, [id, loadBook])
 
-  // Keep form fields synced with latest book details
   useEffect(() => {
     if (book) {
       form.setFieldsValue({
@@ -48,39 +60,30 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
         authorId: book.author.id,
         yearPublished: book.yearPublished,
         numberPages: book.numberPages,
-        booktypeId: book.bookType?.id,
+        bookTypeId: book.bookType?.id,
         genreId: book.genre?.id,
       })
     }
   }, [book, form])
 
-  const startEditing = () => {
-    loadAuthors()
-    setIsEditing(true)
-  }
-
-  const cancelEditing = () => {
-    if (book) {
-      form.setFieldsValue({
-        title: book.title,
-        authorId: book.author.id,
-        yearPublished: book.yearPublished,
-        numberPages: book.numberPages,
-        booktypeId: book.bookType?.id,
-        genreId: book.genre?.id,
-      })
+  const startEditing = async () => {
+    try {
+      await Promise.all([
+        loadAuthors(),
+        loadGenres(),
+        loadBookTypes()
+    ])
+    } catch (e) {
+    message.error("Failed to load metadata")
     }
-    setIsEditing(false)
+    setIsEditing(true)
   }
 
   const saveChanges = async () => {
     try {
       const values = await form.validateFields()
       await updateBook(values)
-
-      // Reload details after update
       await loadBook()
-
       setIsEditing(false)
       message.success('Book updated successfully!')
     } catch (error) {
@@ -88,162 +91,165 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
     }
   }
 
-  if (isLoading) return <Skeleton active />
+  if (isLoading) return <Skeleton active avatar paragraph={{ rows: 10 }} />
 
   return (
-    <Space direction="vertical" style={{ textAlign: 'left', width: '100%' }}>
-      <AppBreadcrumb
-        items={[
-          { title: 'Books', href: '/books', icon: <BookOutlined /> },
-          { title: book?.title || 'Book Details' },
-        ]}
-      />
-
-      <Link to={booksRoute.to}>
-        <ArrowLeftOutlined /> Back to list
-      </Link>
-
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <Typography.Title level={1}>Book Details</Typography.Title>
-
-        <Space>
-          <PurchaseBookModal bookId={id} />
-          {isEditing ? (
-            <>
-              <Button type="primary" onClick={saveChanges}>
-                Save
-              </Button>
-              <Button onClick={cancelEditing}>Cancel</Button>
-            </>
-          ) : (
-            <Button
-              type="primary"
-              icon={<EditOutlined />}
-              onClick={startEditing}
-              disabled={!book}
-            >
-              Edit Info
-            </Button>
-          )}
-        </Space>
-      </div>
-
-      {isEditing ? (
-        <Form form={form} layout="vertical" name="edit_book_form">
-          <Form.Item
-            name="title"
-            label="Book Title"
-            rules={[{ required: true, message: 'Please enter the title' }]}
-          >
-            <Input placeholder="Enter book title" />
-          </Form.Item>
-
-          <Form.Item
-            name="authorId"
-            label="Author"
-            rules={[{ required: true }]}
-          >
-            <Select
-              placeholder="Select an author"
-              options={authors.map(a => ({
-                label: `${a.firstName} ${a.lastName}`,
-                value: a.id,
-              }))}
-              disabled={!isEditing}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="yearPublished"
-            label="Publication Year"
-            rules={[{ required: true, message: 'Please enter the year' }]}
-          >
-            <InputNumber
-              style={{ width: '100%' }}
-              placeholder="YYYY"
-              disabled={!isEditing}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="numberPages"
-            label="Number of Pages"
-            rules={[
-              { required: false, message: 'Please enter the number of pages' },
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+      <Row justify="space-between" align="middle" style={{ marginBottom: 20 }}>
+        <Col>
+          <AppBreadcrumb
+            items={[
+              { title: 'Books', href: '/books', icon: <BookOutlined /> },
+              { title: book?.title || 'Book Details' },
             ]}
-          >
-            <InputNumber
-              style={{ width: '100%' }}
-              placeholder="Enter number of pages"
-              disabled={!isEditing}
-            />
-          </Form.Item>
-        </Form>
-      ) : (
-        <>
-          <Typography.Title level={2}>{book?.title}</Typography.Title>
+          />
+          <Link to={booksRoute.to} style={{ display: 'inline-flex', alignItems: 'center', marginTop: 8 }}>
+            <ArrowLeftOutlined style={{ marginRight: 8 }} /> Back to list
+          </Link>
+        </Col>
+        <Col>
+          <Space>
+            <PurchaseBookModal bookId={id} />
+            {isEditing ? (
+              <>
+                <Button onClick={() => setIsEditing(false)}>Cancel</Button>
+                <Button type="primary" onClick={saveChanges}>Save</Button>
+              </>
+            ) : (
+              <Button type="primary" icon={<EditOutlined />} onClick={startEditing}>
+                Edit Info
+              </Button>
+            )}
+          </Space>
+        </Col>
+      </Row>
 
-          <Typography.Title level={3} type="secondary">
-            By {book?.author?.firstName} {book?.author?.lastName}
-          </Typography.Title>
-
-          <Typography.Text strong>Published Year: </Typography.Text>
-          <Typography.Text>{book?.yearPublished}</Typography.Text>
-
-          {book?.coverPath && (
-            <img
-              src={API_BASE_URL + book.coverPath}
-              alt={`${book.title} cover`}
-              style={{
-                marginTop: '1rem',
-                maxWidth: '200px',
-                borderRadius: '5px',
-              }}
-            />
-          )}
-        </>
-      )}
-
-      <Typography.Title level={4} style={{ marginTop: '1rem' }}>
-        Clients ({book?.purchases?.length ?? 0})
-      </Typography.Title>
-
-      {!book?.purchases?.length ? (
-        <Typography.Text type="secondary">No clients yet</Typography.Text>
-      ) : (
-        <List
-          style={{ width: '100%' }}
-          dataSource={book.purchases}
-          renderItem={purchase => (
-            <List.Item>
-              <List.Item.Meta
-                avatar={
-                  hasImagePath(purchase.clientImagePath) ? (
-                    <Avatar
-                      src={API_BASE_URL + purchase.clientImagePath!.trim()}
-                    />
-                  ) : (
-                    <Avatar>
-                      {getInitials(
-                        purchase.clientFirstName,
-                        purchase.clientLastName,
-                      )}
-                    </Avatar>
-                  )
-                }
-                title={`${purchase.clientFirstName} ${purchase.clientLastName}`}
-                description={`Purchase date: ${new Date(purchase.purchaseDate).toLocaleDateString()}`}
+      <Row gutter={[32, 32]}>
+        <Col xs={24} md={8} lg={6}>
+          <div style={{ position: 'sticky', top: 20 }}>
+            {book?.coverPath ? (
+              <img
+                src={API_BASE_URL + book.coverPath}
+                alt={book.title}
+                style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
               />
-            </List.Item>
+            ) : (
+              <div style={{ width: '100%', aspectRatio: '2/3', background: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '8px' }}>
+                <BookOutlined style={{ fontSize: 64, color: '#d9d9d9' }} />
+              </div>
+            )}
+            
+            <Card size="small" style={{ marginTop: 20, borderRadius: '8px' }}>
+              <Space direction="vertical" style={{ width: '100%' }}>
+                <Text type="secondary"><CalendarOutlined /> Published: <b>{book?.yearPublished}</b></Text>
+                <Text type="secondary"><FileTextOutlined /> Pages: <b>{book?.numberPages || 'N/A'}</b></Text>
+                <Divider style={{ margin: '8px 0' }} />
+                <Space wrap>
+                  {book?.bookType && <Tag color="blue">{book.bookType.name}</Tag>}
+                  {book?.genre && <Tag color="purple">{book.genre.name}</Tag>}
+                </Space>
+              </Space>
+            </Card>
+          </div>
+        </Col>
+
+        <Col xs={24} md={16} lg={18}>
+          {isEditing ? (
+            <Card title="Edit Book Information">
+              <Form form={form} layout="vertical">
+                <Form.Item name="title" label="Title" rules={[{ required: true }]}>
+                  <Input />
+                </Form.Item>
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <Form.Item name="authorId" label="Author" rules={[{ required: true }]}>
+                      <Select 
+                        showSearch
+                        optionFilterProp="label"
+                        options={authors.map(a => ({ label: `${a.firstName} ${a.lastName}`, value: a.id }))} 
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item name="yearPublished" label="Year Published">
+                      <InputNumber style={{ width: '100%' }} />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={16}>
+                  <Col span={8}>
+                    <Form.Item name="numberPages" label="Pages">
+                      <InputNumber style={{ width: '100%' }} />
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item name="bookTypeId" label="Format">
+                      <Select 
+                        placeholder="Format"
+                        options={bookTypes.map(t => ({ label: t.name, value: t.id }))} 
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item name="genreId" label="Genre">
+                      <Select 
+                        placeholder="Genre"
+                        options={genres.map(g => ({ label: g.name, value: g.id }))} 
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Form>
+            </Card>
+          ) : (
+            <>
+              <div style={{ marginBottom: 24 }}>
+                <Title level={1} style={{ margin: 0 }}>{book?.title}</Title>
+                <Title level={3} type="secondary" style={{ marginTop: 4, fontWeight: 300 }}>
+                  by {book?.author?.firstName} {book?.author?.lastName}
+                </Title>
+              </div>
+
+              <Divider orientation="left"><UserOutlined /> Owners ({book?.purchases?.length ?? 0})</Divider>
+              
+              <List
+                grid={{ gutter: 16, xs: 1, sm: 2, lg: 3 }}
+                dataSource={book?.purchases}
+                renderItem={purchase => (
+                  <List.Item>
+                    <Link to="/clients/$clientId" params={{ clientId: purchase.clientId }}>
+                      <Card size="small">
+                        <div style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
+                          <div style={{ flexShrink: 0 }}>
+                            {hasImagePath(purchase.clientImagePath) ? (
+                              <Avatar src={API_BASE_URL + purchase.clientImagePath!.trim()} />
+                            ) : (
+                              <Avatar>{getInitials(purchase.clientFirstName, purchase.clientLastName)}</Avatar>
+                            )}
+                          </div>
+                          <div style={{ marginLeft: 12, minWidth: 0, flex: 1 }}>
+                            <Text strong style={{ 
+                              display: 'block', 
+                              whiteSpace: 'nowrap', 
+                              overflow: 'hidden', 
+                              textOverflow: 'ellipsis' 
+                            }}>
+                              {purchase.clientFirstName} {purchase.clientLastName}
+                            </Text>
+                            <Text type="secondary" style={{ fontSize: '12px' }}>
+                              {new Date(purchase.purchaseDate).toLocaleDateString()}
+                            </Text>
+                          </div>
+                        </div>
+                      </Card>
+                    </Link>
+                  </List.Item>
+                )}
+              />
+            </>
           )}
-        />
-      )}
-    </Space>
+        </Col>
+      </Row>
+    </div>
   )
 }

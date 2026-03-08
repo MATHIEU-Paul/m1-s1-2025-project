@@ -1,7 +1,9 @@
 import {
   ArrowLeftOutlined,
+  BookOutlined,
   EditOutlined,
   TeamOutlined,
+  BarChartOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import {
@@ -14,6 +16,11 @@ import {
   Skeleton,
   Space,
   Typography,
+  Row,
+  Col,
+  Card,
+  Statistic,
+  Divider,
 } from 'antd'
 import { useEffect, useState } from 'react'
 import { AppBreadcrumb } from '../../components/AppBreadcrumb'
@@ -22,24 +29,23 @@ import { API_BASE_URL } from '../../config/api'
 import { Route as authorsRoute } from '../../routes/authors'
 import { useAuthorDetailsProvider } from '../providers/useAuthorDetailsProvider'
 
+const { Title, Text } = Typography
+
 interface AuthorDetailsProps {
   id: string
 }
 
 export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
-  const { isLoading, author, loadAuthor, updateAuthor } =
-    useAuthorDetailsProvider(id)
+  const { isLoading, author, loadAuthor, updateAuthor } = useAuthorDetailsProvider(id)
   const [isEditing, setIsEditing] = useState(false)
   const [form] = Form.useForm()
-  const authorTitle = [author?.firstName, author?.lastName]
-    .filter(Boolean)
-    .join(' ')
+  
+  const authorTitle = [author?.firstName, author?.lastName].filter(Boolean).join(' ')
 
   useEffect(() => {
     loadAuthor()
   }, [id, loadAuthor])
 
-  // Sync form values whenever the author data changes
   useEffect(() => {
     if (author) {
       form.setFieldsValue({
@@ -48,20 +54,6 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
       })
     }
   }, [author, form])
-
-  const startEditing = () => {
-    setIsEditing(true)
-  }
-
-  const cancelEditing = () => {
-    if (author) {
-      form.setFieldsValue({
-        firstName: author.firstName,
-        lastName: author.lastName,
-      })
-    }
-    setIsEditing(false)
-  }
 
   const saveChanges = async () => {
     try {
@@ -75,130 +67,137 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
     }
   }
 
-  if (isLoading) return <Skeleton active />
+  if (isLoading) return <Skeleton active avatar paragraph={{ rows: 10 }} />
 
   return (
-    <Space direction="vertical" style={{ textAlign: 'left', width: '100%' }}>
-      <AppBreadcrumb
-        items={[
-          { title: 'Authors', href: '/authors', icon: <TeamOutlined /> },
-          {
-            title: authorTitle || 'Author Details',
-          },
-        ]}
-      />
-
-      <Link to={authorsRoute.to}>
-        <ArrowLeftOutlined /> Back to list
-      </Link>
-
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <Typography.Title level={1}>Author Details</Typography.Title>
-        <Space>
-          {isEditing ? (
-            <>
-              <Button type="primary" onClick={saveChanges}>
-                Save
+    <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '20px' }}>
+      <Row justify="space-between" align="middle" style={{ marginBottom: 24 }}>
+        <Col>
+          <AppBreadcrumb
+            items={[
+              { title: 'Authors', href: '/authors', icon: <TeamOutlined /> },
+              { title: authorTitle || 'Author Details' },
+            ]}
+          />
+          <Link to={authorsRoute.to} style={{ display: 'inline-flex', alignItems: 'center', marginTop: 8 }}>
+            <ArrowLeftOutlined style={{ marginRight: 8 }} /> Back to authors
+          </Link>
+        </Col>
+        <Col>
+          <Space>
+            {isEditing ? (
+              <>
+                <Button onClick={() => setIsEditing(false)}>Cancel</Button>
+                <Button type="primary" onClick={saveChanges}>Save Changes</Button>
+              </>
+            ) : (
+              <Button type="primary" icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
+                Edit Author
               </Button>
-              <Button onClick={cancelEditing}>Cancel</Button>
-            </>
-          ) : (
-            <Button
-              type="primary"
-              icon={<EditOutlined />}
-              onClick={startEditing}
-              disabled={!author}
-            >
-              Edit Info
-            </Button>
-          )}
-        </Space>
-      </div>
+            )}
+          </Space>
+        </Col>
+      </Row>
 
-      <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-        {hasImagePath(author?.imagePath) ? (
-          <Avatar size={100} src={API_BASE_URL + author.imagePath.trim()} />
-        ) : (
-          <Avatar
-            size={100}
-            style={{ backgroundColor: 'var(--app-brand-600)' }}
-          >
-            {getInitials(author?.firstName, author?.lastName)}
-          </Avatar>
-        )}
-        <div style={{ flex: 1 }}>
+      <Row gutter={[32, 32]}>
+        <Col xs={24} md={8} lg={7}>
+          <Card bordered={false} style={{ textAlign: 'center', borderRadius: '12px' }}>
+            {hasImagePath(author?.imagePath) ? (
+              <Avatar 
+                size={160} 
+                src={API_BASE_URL + author.imagePath!.trim()} 
+                style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+              />
+            ) : (
+              <Avatar
+                size={160}
+                style={{ backgroundColor: 'var(--app-brand-600)', fontSize: '64px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+              >
+                {getInitials(author?.firstName, author?.lastName)}
+              </Avatar>
+            )}
+
+            <Divider />
+
+            <Row gutter={16}>
+              <Col span={12}>
+                <Statistic 
+                    title="Books" 
+                    value={author?.books?.length ?? 0} 
+                    prefix={<BookOutlined style={{ fontSize: '14px' }} />} 
+                />
+              </Col>
+              <Col span={12}>
+                <Statistic 
+                    title="Avg. Sales" 
+                    value={author?.purchasesAverage ?? 0} 
+                    precision={2}
+                    prefix={<BarChartOutlined style={{ fontSize: '14px' }} />} 
+                />
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+
+        <Col xs={24} md={16} lg={17}>
           {isEditing ? (
-            <Form form={form} layout="vertical" name="edit_author_form">
-              <Form.Item
-                name="firstName"
-                label="First Name"
-                rules={[
-                  { required: true, message: 'Please enter the first name' },
-                ]}
-              >
-                <Input placeholder="Enter first name" />
-              </Form.Item>
-              <Form.Item
-                name="lastName"
-                label="Last Name"
-                rules={[
-                  { required: true, message: 'Please enter the last name' },
-                ]}
-              >
-                <Input placeholder="Enter last name" />
-              </Form.Item>
-            </Form>
+            <Card title="Edit Personal Information">
+              <Form form={form} layout="vertical">
+                <Row gutter={16}>
+                  <Col span={12}>
+                    <Form.Item name="firstName" label="First Name" rules={[{ required: true }]}>
+                      <Input size="large" />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item name="lastName" label="Last Name" rules={[{ required: true }]}>
+                      <Input size="large" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Form>
+            </Card>
           ) : (
             <>
-              <Typography.Title level={2} style={{ margin: 0 }}>
-                {author?.firstName} {author?.lastName}
-              </Typography.Title>
-              <Typography.Text type="secondary" strong>
-                Average Purchases per book:{' '}
-                {author?.purchasesAverage.toFixed(2)}
-              </Typography.Text>
+              <div style={{ marginBottom: 32 }}>
+                <Title level={1} style={{ margin: 0 }}>{author?.firstName} {author?.lastName}</Title>
+                <Text type="secondary">Author Profile</Text>
+              </div>
+
+              <Title level={4}><BookOutlined /> Bibliography</Title>
+              <List
+                grid={{ gutter: 16, xs: 1, sm: 2 }}
+                dataSource={author?.books}
+                renderItem={book => (
+                  <List.Item>
+                    <Link to="/books/$bookId" params={{ bookId: book.id }}>
+                      <Card 
+                        hoverable 
+                        size="small" 
+                        styles={{ body: { display: 'flex', alignItems: 'center', padding: '12px' } }}
+                      >
+                        <Avatar
+                          shape="square"
+                          size={48}
+                          src={book.coverPath ? API_BASE_URL + book.coverPath : undefined}
+                          icon={!book.coverPath && <BookOutlined />}
+                          style={{ marginRight: 16, borderRadius: '4px', flexShrink: 0 }}
+                        />
+                        <div style={{ overflow: 'hidden' }}>
+                          <Text strong style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {book.title}
+                          </Text>
+                          <Text type="secondary" style={{ fontSize: '12px' }}>View Details</Text>
+                        </div>
+                      </Card>
+                    </Link>
+                  </List.Item>
+                )}
+              />
             </>
           )}
-        </div>
-      </div>
-
-      <Typography.Title level={4} style={{ marginTop: '2rem' }}>
-        Books ({author?.books?.length ?? 0})
-      </Typography.Title>
-
-      {!author?.books?.length ? (
-        <Typography.Text type="secondary">No books yet</Typography.Text>
-      ) : (
-        <List
-          style={{ width: '100%' }}
-          dataSource={author.books}
-          renderItem={book => (
-            <List.Item>
-              <List.Item.Meta
-                avatar={
-                  book.coverPath ? (
-                    <Avatar
-                      shape="square"
-                      src={API_BASE_URL + book.coverPath}
-                    />
-                  ) : undefined
-                }
-                title={
-                  <Link to="/books/$bookId" params={{ bookId: book.id }}>
-                    {book.title}
-                  </Link>
-                }
-              />
-            </List.Item>
-          )}
-        />
-      )}
-    </Space>
+        </Col>
+      </Row>
+    </div>
   )
 }
