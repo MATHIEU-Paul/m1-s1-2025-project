@@ -42,13 +42,17 @@ export function CreateAuthorModal({ onCreate }: CreateAuthorModalProps) {
         title="Create New Author"
       >
         <Space direction="vertical" style={{ width: '100%' }}>
-          <Text>First name</Text>
+          <Text>
+            <Text type="danger">*</Text> First name
+          </Text>
           <Input
             placeholder="First Name"
             value={firstName}
             onChange={e => setFirstName(e.target.value)}
           />
-          <Text>Last name</Text>
+          <Text>
+            <Text type="danger">*</Text> Last name
+          </Text>
           <Input
             placeholder="Last Name"
             value={lastName}

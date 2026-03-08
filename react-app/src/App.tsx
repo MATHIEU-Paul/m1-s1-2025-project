@@ -13,67 +13,31 @@ import {
   Tag,
   Typography,
 } from 'antd'
-import axios from 'axios'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import './App.css'
 import { useAuth } from './auth/useAuth'
 import { AppBreadcrumb } from './components/AppBreadcrumb'
-import { API_BASE_URL } from './config/api'
-import type {
-  PurchaseHomeSaleModel,
-  PurchaseHomeSummaryModel,
-} from './purchases/PurchaseModel'
+import { usePurchaseHomeSummaryProvider } from './purchases/providers/usePurchaseHomeSummaryProvider'
 import { Route as authorsRoute } from './routes/authors'
 import { Route as booksRoute } from './routes/books'
 import { Route as clientsRoute } from './routes/clients'
 
 function App() {
   const { user } = useAuth()
-  const [latestPurchases, setLatestPurchases] = useState<
-    PurchaseHomeSaleModel[]
-  >([])
-  const [totalSales, setTotalSales] = useState(0)
-  const [distinctCustomers, setDistinctCustomers] = useState(0)
-  const [distinctBooks, setDistinctBooks] = useState(0)
-  const [lastSaleDate, setLastSaleDate] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const {
+    latestPurchases,
+    totalSales,
+    distinctCustomers,
+    distinctBooks,
+    lastSaleDate,
+    isLoading,
+    errorMessage,
+    loadHomeSummary,
+  } = usePurchaseHomeSummaryProvider()
 
   useEffect(() => {
-    const loadLatestPurchases = async () => {
-      try {
-        setIsLoading(true)
-        setErrorMessage(null)
-
-        const summaryResponse = await axios.get<PurchaseHomeSummaryModel>(
-          `${API_BASE_URL}/purchases/home-summary`,
-          {
-            params: {
-              limit: 5,
-            },
-          },
-        )
-
-        setLatestPurchases(summaryResponse.data.latestSales)
-        setTotalSales(summaryResponse.data.stats.totalSales)
-        setDistinctCustomers(summaryResponse.data.stats.distinctCustomers)
-        setDistinctBooks(summaryResponse.data.stats.distinctBooks)
-        setLastSaleDate(summaryResponse.data.stats.lastSaleDate)
-      } catch (error) {
-        console.error(error)
-        setErrorMessage('Unable to load home data right now.')
-        setLatestPurchases([])
-        setTotalSales(0)
-        setDistinctCustomers(0)
-        setDistinctBooks(0)
-        setLastSaleDate(null)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    void loadLatestPurchases()
-  }, [])
+    void loadHomeSummary(5)
+  }, [loadHomeSummary])
 
   const dateFormatter = useMemo(
     () =>

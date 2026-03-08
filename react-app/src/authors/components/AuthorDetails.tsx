@@ -36,11 +36,14 @@ interface AuthorDetailsProps {
 }
 
 export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
-  const { isLoading, author, loadAuthor, updateAuthor } = useAuthorDetailsProvider(id)
+  const { isLoading, author, loadAuthor, updateAuthor } =
+    useAuthorDetailsProvider(id)
   const [isEditing, setIsEditing] = useState(false)
   const [form] = Form.useForm()
-  
-  const authorTitle = [author?.firstName, author?.lastName].filter(Boolean).join(' ')
+
+  const authorTitle = [author?.firstName, author?.lastName]
+    .filter(Boolean)
+    .join(' ')
 
   useEffect(() => {
     loadAuthor()
@@ -79,7 +82,14 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
               { title: authorTitle || 'Author Details' },
             ]}
           />
-          <Link to={authorsRoute.to} style={{ display: 'inline-flex', alignItems: 'center', marginTop: 8 }}>
+          <Link
+            to={authorsRoute.to}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              marginTop: 8,
+            }}
+          >
             <ArrowLeftOutlined style={{ marginRight: 8 }} /> Back to authors
           </Link>
         </Col>
@@ -88,10 +98,16 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
             {isEditing ? (
               <>
                 <Button onClick={() => setIsEditing(false)}>Cancel</Button>
-                <Button type="primary" onClick={saveChanges}>Save Changes</Button>
+                <Button type="primary" onClick={saveChanges}>
+                  Save Changes
+                </Button>
               </>
             ) : (
-              <Button type="primary" icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
+              <Button
+                type="primary"
+                icon={<EditOutlined />}
+                onClick={() => setIsEditing(true)}
+              >
                 Edit Author
               </Button>
             )}
@@ -101,17 +117,24 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
 
       <Row gutter={[32, 32]}>
         <Col xs={24} md={8} lg={7}>
-          <Card bordered={false} style={{ textAlign: 'center', borderRadius: '12px' }}>
+          <Card
+            bordered={false}
+            style={{ textAlign: 'center', borderRadius: '12px' }}
+          >
             {hasImagePath(author?.imagePath) ? (
-              <Avatar 
-                size={160} 
-                src={API_BASE_URL + author.imagePath!.trim()} 
+              <Avatar
+                size={160}
+                src={API_BASE_URL + author.imagePath!.trim()}
                 style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
               />
             ) : (
               <Avatar
                 size={160}
-                style={{ backgroundColor: 'var(--app-brand-600)', fontSize: '64px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                style={{
+                  backgroundColor: 'var(--app-brand-600)',
+                  fontSize: '64px',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                }}
               >
                 {getInitials(author?.firstName, author?.lastName)}
               </Avatar>
@@ -121,18 +144,18 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
 
             <Row gutter={16}>
               <Col span={12}>
-                <Statistic 
-                    title="Books" 
-                    value={author?.books?.length ?? 0} 
-                    prefix={<BookOutlined style={{ fontSize: '14px' }} />} 
+                <Statistic
+                  title="Books"
+                  value={author?.books?.length ?? 0}
+                  prefix={<BookOutlined style={{ fontSize: '14px' }} />}
                 />
               </Col>
               <Col span={12}>
-                <Statistic 
-                    title="Avg. Sales" 
-                    value={author?.purchasesAverage ?? 0} 
-                    precision={2}
-                    prefix={<BarChartOutlined style={{ fontSize: '14px' }} />} 
+                <Statistic
+                  title="Avg. Sales"
+                  value={author?.purchasesAverage ?? 0}
+                  precision={2}
+                  prefix={<BarChartOutlined style={{ fontSize: '14px' }} />}
                 />
               </Col>
             </Row>
@@ -145,12 +168,20 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
               <Form form={form} layout="vertical">
                 <Row gutter={16}>
                   <Col span={12}>
-                    <Form.Item name="firstName" label="First Name" rules={[{ required: true }]}>
+                    <Form.Item
+                      name="firstName"
+                      label="First Name"
+                      rules={[{ required: true }]}
+                    >
                       <Input size="large" />
                     </Form.Item>
                   </Col>
                   <Col span={12}>
-                    <Form.Item name="lastName" label="Last Name" rules={[{ required: true }]}>
+                    <Form.Item
+                      name="lastName"
+                      label="Last Name"
+                      rules={[{ required: true }]}
+                    >
                       <Input size="large" />
                     </Form.Item>
                   </Col>
@@ -160,34 +191,62 @@ export const AuthorDetails = ({ id }: AuthorDetailsProps) => {
           ) : (
             <>
               <div style={{ marginBottom: 32 }}>
-                <Title level={1} style={{ margin: 0 }}>{author?.firstName} {author?.lastName}</Title>
+                <Title level={1} style={{ margin: 0 }}>
+                  {author?.firstName} {author?.lastName}
+                </Title>
                 <Text type="secondary">Author Profile</Text>
               </div>
 
-              <Title level={4}><BookOutlined /> Bibliography</Title>
+              <Title level={4}>
+                <BookOutlined /> Bibliography
+              </Title>
               <List
                 grid={{ gutter: 16, xs: 1, sm: 2 }}
                 dataSource={author?.books}
                 renderItem={book => (
                   <List.Item>
                     <Link to="/books/$bookId" params={{ bookId: book.id }}>
-                      <Card 
-                        hoverable 
-                        size="small" 
-                        styles={{ body: { display: 'flex', alignItems: 'center', padding: '12px' } }}
+                      <Card
+                        hoverable
+                        size="small"
+                        styles={{
+                          body: {
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: '12px',
+                          },
+                        }}
                       >
                         <Avatar
                           shape="square"
                           size={48}
-                          src={book.coverPath ? API_BASE_URL + book.coverPath : undefined}
+                          src={
+                            book.coverPath
+                              ? API_BASE_URL + book.coverPath
+                              : undefined
+                          }
                           icon={!book.coverPath && <BookOutlined />}
-                          style={{ marginRight: 16, borderRadius: '4px', flexShrink: 0 }}
+                          style={{
+                            marginRight: 16,
+                            borderRadius: '4px',
+                            flexShrink: 0,
+                          }}
                         />
                         <div style={{ overflow: 'hidden' }}>
-                          <Text strong style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          <Text
+                            strong
+                            style={{
+                              display: 'block',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
                             {book.title}
                           </Text>
-                          <Text type="secondary" style={{ fontSize: '12px' }}>View Details</Text>
+                          <Text type="secondary" style={{ fontSize: '12px' }}>
+                            View Details
+                          </Text>
                         </div>
                       </Card>
                     </Link>

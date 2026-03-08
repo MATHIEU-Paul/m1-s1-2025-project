@@ -37,13 +37,13 @@ export class CreateBookDto {
 export class UpdateBookDto {
   @IsString()
   @IsOptional()
-  title: string;
+  title?: string;
 
   @IsInt()
   @Min(1500)
   @Max(2025)
   @IsOptional()
-  yearPublished: number;
+  yearPublished?: number;
 
   @IsInt()
   @IsOptional()
@@ -57,7 +57,7 @@ export class UpdateBookDto {
 
   @IsUUID(4)
   @IsOptional()
-  authorId: AuthorId;
+  authorId?: AuthorId;
 
   @IsUUID(4)
   @IsOptional()

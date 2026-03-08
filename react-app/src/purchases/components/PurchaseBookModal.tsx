@@ -1,4 +1,12 @@
-import { Button, DatePicker, Modal, Select, Space, message } from 'antd'
+import {
+  Button,
+  DatePicker,
+  Modal,
+  Select,
+  Space,
+  Typography,
+  message,
+} from 'antd'
 import type { Dayjs } from 'dayjs'
 import { useEffect, useState } from 'react'
 import { useClientProvider } from '../../clients/providers/useClientProvider'
@@ -9,6 +17,7 @@ interface PurchaseBookModalProps {
 }
 
 export function PurchaseBookModal({ bookId }: PurchaseBookModalProps) {
+  const { Text } = Typography
   const [isOpen, setIsOpen] = useState(false)
   const [clientId, setClientId] = useState<string | undefined>(undefined)
   const [purchaseDate, setPurchaseDate] = useState<Dayjs | null>(null)
@@ -63,6 +72,9 @@ export function PurchaseBookModal({ bookId }: PurchaseBookModalProps) {
         }}
       >
         <Space direction="vertical" style={{ width: '100%' }}>
+          <Text>
+            <Text type="danger">*</Text> Client
+          </Text>
           <Select
             placeholder="Select a client"
             options={clients.map(client => ({
@@ -72,6 +84,9 @@ export function PurchaseBookModal({ bookId }: PurchaseBookModalProps) {
             onChange={value => setClientId(value)}
             value={clientId}
           />
+          <Text>
+            <Text type="danger">*</Text> Purchase date
+          </Text>
           <DatePicker
             style={{ width: '100%' }}
             onChange={date => setPurchaseDate(date)}

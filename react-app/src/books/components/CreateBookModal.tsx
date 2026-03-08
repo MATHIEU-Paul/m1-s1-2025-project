@@ -73,7 +73,9 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
         title="Create New Book"
       >
         <Space direction="vertical" style={{ width: '100%' }}>
-          <Text>Title</Text>
+          <Text>
+            <Text type="danger">*</Text> Title
+          </Text>
           <Input
             type="text"
             placeholder="Title"
@@ -87,14 +89,18 @@ export function CreateBookModal({ onCreate }: CreateBookModalProps) {
             value={numberPages}
             onChange={e => setNumberPages(Number(e.target.value))}
           />
-          <Text>Year published</Text>
+          <Text>
+            <Text type="danger">*</Text> Year published
+          </Text>
           <Input
             type="number"
             placeholder="Year Published"
             value={yearPublished}
             onChange={e => setYearPublished(Number(e.target.value))}
           />
-          <Text>Author</Text>
+          <Text>
+            <Text type="danger">*</Text> Author
+          </Text>
           <Select
             style={{ width: '100%' }}
             placeholder="Select an author"

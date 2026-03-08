@@ -164,7 +164,12 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
             )}
           </div>
           <div>
-            <label style={{ fontWeight: 'bold' }}>First Name:</label>
+            <label style={{ fontWeight: 'bold' }}>
+              {isEditing ? (
+                <Typography.Text type="danger">*</Typography.Text>
+              ) : null}{' '}
+              First Name:
+            </label>
             {isEditing ? (
               <Input
                 value={firstName}
@@ -180,7 +185,12 @@ export const ClientDetails = ({ id }: ClientDetailsProps) => {
             )}
           </div>
           <div>
-            <label style={{ fontWeight: 'bold' }}>Last Name:</label>
+            <label style={{ fontWeight: 'bold' }}>
+              {isEditing ? (
+                <Typography.Text type="danger">*</Typography.Text>
+              ) : null}{' '}
+              Last Name:
+            </label>
             {isEditing ? (
               <Input
                 value={lastName}

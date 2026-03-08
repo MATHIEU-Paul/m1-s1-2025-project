@@ -53,14 +53,18 @@ export function CreateClientModal({ onCreate }: CreateClientModalProps) {
         title="Create New Client"
       >
         <Space direction="vertical" style={{ width: '100%' }}>
-          <Text>First name</Text>
+          <Text>
+            <Text type="danger">*</Text> First name
+          </Text>
           <Input
             type="text"
             placeholder="First Name"
             value={firstName}
             onChange={e => setFirstName(e.target.value)}
           />
-          <Text>Last name</Text>
+          <Text>
+            <Text type="danger">*</Text> Last name
+          </Text>
           <Input
             type="text"
             placeholder="Last Name"
